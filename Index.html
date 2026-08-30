@@ -1,0 +1,3574 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#150b2e" />
+<title>Verdad o Reto</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Manrope:wght@400;500;600;700&display=swap');
+
+:root {
+  --bg-void: #150b2e;
+  --bg-void-deep: #0d0620;
+  --surface-card: #241546;
+  --surface-card-hi: #331d61;
+  --accent-pink: #ff2d78;
+  --accent-pink-dim: #b81f57;
+  --accent-yellow: #ffd23f;
+  --text-primary: #f5efff;
+  --text-muted: #b9a9de;
+
+  --font-display: 'Baloo 2', system-ui, sans-serif;
+  --font-body: 'Manrope', system-ui, sans-serif;
+
+  --radius-lg: 28px;
+  --radius-md: 18px;
+  --radius-sm: 12px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  color: var(--text-primary);
+  background: radial-gradient(circle at 50% 0%, #2a1750 0%, var(--bg-void) 45%, var(--bg-void-deep) 100%);
+  background-attachment: fixed;
+  min-height: 100vh;
+  min-height: 100dvh;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior-y: contain;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  min-height: 100dvh;
+  position: relative;
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  margin: 0;
+  line-height: 1.1;
+}
+
+p { margin: 0; }
+
+button {
+  font-family: var(--font-body);
+  cursor: pointer;
+}
+
+button:focus-visible, input:focus-visible, [tabindex]:focus-visible {
+  outline: 3px solid var(--accent-yellow);
+  outline-offset: 2px;
+}
+
+.screen {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 28px 24px 32px;
+  gap: 20px;
+  animation: screen-in 0.35s ease;
+}
+
+@keyframes screen-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.eyebrow {
+  font-family: var(--font-body);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: 12px;
+  color: var(--accent-yellow);
+}
+
+.title {
+  font-size: 34px;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.subtitle {
+  font-size: 15px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.card {
+  background: linear-gradient(165deg, var(--surface-card-hi), var(--surface-card));
+  border-radius: var(--radius-lg);
+  padding: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.btn {
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+  font-weight: 700;
+  font-size: 16px;
+  font-family: var(--font-display);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: transform 0.15s ease, filter 0.15s ease;
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+  min-height: 48px;
+}
+
+.btn:active { transform: scale(0.97); }
+
+.btn-primary {
+  background: var(--accent-pink);
+  color: #fff;
+  box-shadow: 0 8px 20px -6px rgba(255, 45, 120, 0.6);
+}
+
+.btn-primary:hover { filter: brightness(1.08); }
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-primary);
+  border: 1.5px solid rgba(255, 255, 255, 0.14);
+}
+
+.btn-yellow {
+  background: var(--accent-yellow);
+  color: #251246;
+  box-shadow: 0 8px 20px -6px rgba(255, 210, 63, 0.5);
+}
+
+.btn-block { width: 100%; }
+
+.text-input {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1.5px solid rgba(255, 255, 255, 0.14);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-family: inherit;
+  min-height: 48px;
+}
+
+.text-input::placeholder {
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.text-input:focus {
+  outline: none;
+  border-color: var(--accent-pink);
+}
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.option-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.option-card {
+  background: var(--surface-card);
+  border: 2px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-md);
+  padding: 18px 14px;
+  text-align: left;
+  color: var(--text-primary);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  touch-action: manipulation;
+  min-height: 48px;
+}
+
+.option-card:disabled {
+  opacity: 0.35;
+  filter: grayscale(0.4);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.option-card:active { transform: scale(0.97); transition: transform 0.1s ease; }
+
+.option-card.selected {
+  border-color: var(--accent-pink);
+  background: linear-gradient(165deg, var(--surface-card-hi), var(--surface-card));
+  box-shadow: 0 0 0 1px var(--accent-pink);
+}
+
+.option-card .icon { font-size: 26px; }
+.option-card .label { font-family: var(--font-display); font-weight: 700; font-size: 16px; }
+.option-card .desc { font-size: 12.5px; color: var(--text-muted); }
+
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.back-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 14px;
+  padding: 10px 0;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  touch-action: manipulation;
+}
+
+.back-btn:active { opacity: 0.6; transition: opacity 0.1s ease; }
+
+input,
+textarea {
+  font-size: 16px !important; /* evita el zoom automático de iOS al enfocar */
+}
+
+.progress-pill {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.06);
+  padding: 6px 12px;
+  border-radius: 100px;
+}
+
+/* ---------- Decorative background ---------- */
+.bg-blobs {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.bg-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.55;
+}
+
+.bg-blob--pink {
+  width: 260px;
+  height: 260px;
+  background: var(--accent-pink);
+  top: -80px;
+  right: -60px;
+  animation: drift-a 14s ease-in-out infinite;
+}
+
+.bg-blob--yellow {
+  width: 200px;
+  height: 200px;
+  background: var(--accent-yellow);
+  opacity: 0.28;
+  bottom: 10%;
+  left: -70px;
+  animation: drift-b 18s ease-in-out infinite;
+}
+
+.bg-blob--violet {
+  width: 300px;
+  height: 300px;
+  background: #7b3fe4;
+  opacity: 0.35;
+  bottom: -120px;
+  right: -80px;
+  animation: drift-a 20s ease-in-out infinite reverse;
+}
+
+@keyframes drift-a {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-18px, 24px) scale(1.08); }
+}
+
+@keyframes drift-b {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(20px, -16px) scale(1.05); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bg-blob { animation: none !important; }
+}
+
+.screen {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------- Shine sweep on primary button ---------- */
+.btn-primary {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(115deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  transform: skewX(-20deg);
+  animation: shine-sweep 3.2s ease-in-out infinite;
+}
+
+@keyframes shine-sweep {
+  0% { left: -75%; }
+  35%, 100% { left: 140%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-primary::after { animation: none; display: none; }
+}
+
+/* ---------- Hero dice ---------- */
+.hero-badge {
+  animation: hero-breathe 3.4s ease-in-out infinite;
+}
+
+@keyframes hero-breathe {
+  0%, 100% { transform: scale(1) rotate(-3deg); }
+  50% { transform: scale(1.06) rotate(3deg); }
+}
+
+/* ---------- Confetti ---------- */
+.confetti-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 50;
+  overflow: hidden;
+}
+
+.confetti-piece {
+  position: absolute;
+  top: -10px;
+  border-radius: 2px;
+  animation-name: confetti-fall;
+  animation-timing-function: cubic-bezier(0.4, 0.1, 0.6, 1);
+  animation-fill-mode: forwards;
+}
+
+@keyframes confetti-fall {
+  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(var(--fall-distance, 520px)) rotate(var(--spin, 540deg)); opacity: 0; }
+}
+
+/* ---------- Roulette glow ---------- */
+.roulette-wrap {
+  position: relative;
+}
+
+.roulette-glow-ring {
+  position: absolute;
+  inset: -14px;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, var(--accent-pink), var(--accent-yellow), var(--accent-pink));
+  filter: blur(18px);
+  opacity: 0.55;
+  animation: ring-spin 4s linear infinite;
+  z-index: -1;
+}
+
+@keyframes ring-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .roulette-glow-ring { animation: none; }
+}
+
+/* ---------- Intensity bars ---------- */
+.intensity-bar {
+  display: flex;
+  gap: 3px;
+  margin-top: 6px;
+}
+
+.intensity-bar span {
+  flex: 1;
+  height: 4px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.intensity-bar span.filled {
+  background: linear-gradient(90deg, var(--accent-yellow), var(--accent-pink));
+}
+
+/* ---------- Card reveal ---------- */
+.card-reveal {
+  animation: card-reveal 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes card-reveal {
+  from { opacity: 0; transform: scale(0.92) translateY(10px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* ---------- Trophy glow ---------- */
+.trophy-glow {
+  animation: trophy-pulse 2.2s ease-in-out infinite;
+  display: inline-block;
+}
+
+@keyframes trophy-pulse {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 0px var(--accent-yellow)); }
+  50% { transform: scale(1.12); filter: drop-shadow(0 0 14px var(--accent-yellow)); }
+}
+
+/* ---------- Timer con urgencia ---------- */
+.timer-urgent {
+  color: var(--accent-pink) !important;
+  animation: timer-pulse 0.6s ease-in-out infinite;
+}
+
+@keyframes timer-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" data-presets="react">
+const { useState, useReducer, useEffect, useMemo, useRef, useCallback, createContext, useContext } = React;
+
+// ==== src/data/content.js ====
+// Niveles de intensidad
+const LEVELS = [
+  { id: 1, name: 'Divertido', premium: false, tagline: 'Ligero y para romper el hielo' },
+  { id: 2, name: 'Atrevido', premium: true, tagline: 'Más personal' },
+  { id: 3, name: 'Picante', premium: true, tagline: 'Sube la temperatura' },
+  { id: 4, name: 'Extremo', premium: true, tagline: 'Máxima intensidad' },
+]
+
+// modality: 'presencial' | 'distancia' | 'ambas'
+// group: 'pareja' | 'grupo' | 'ambas'
+
+const TRUTHS = [
+  // ---- Nivel 1 · Divertido ----
+  { level: 1, modality: 'ambas', group: 'ambas', text: '¿Cuál fue la mentira más tonta que dijiste para no meterte en problemas?' },
+  { level: 1, modality: 'ambas', group: 'ambas', text: '¿Qué serie o película has visto más de 5 veces?' },
+  { level: 1, modality: 'ambas', group: 'ambas', text: '¿Cuál es tu comida favorita de toda la vida?' },
+  { level: 1, modality: 'ambas', group: 'grupo', text: '¿A quién del grupo llamarías primero en una emergencia?' },
+  { level: 1, modality: 'ambas', group: 'ambas', text: '¿Cuál es tu recuerdo más vergonzoso de la infancia?' },
+  { level: 1, modality: 'ambas', group: 'pareja', text: '¿Qué fue lo primero que pensaste de mí al conocerme?' },
+  { level: 1, modality: 'ambas', group: 'ambas', text: '¿Qué app usas más sin darte cuenta?' },
+  { level: 1, modality: 'ambas', group: 'ambas', text: '¿Cuál es el peor regalo que recibiste?' },
+  { level: 1, modality: 'ambas', group: 'ambas', text: '¿Qué comida odias y todo el mundo ama?' },
+  { level: 1, modality: 'ambas', group: 'ambas', text: '¿Cuál fue tu apodo más vergonzoso de la infancia?' },
+  { level: 1, modality: 'ambas', group: 'grupo', text: '¿Quién del grupo crees que llegaría tarde a su propia boda?' },
+  { level: 1, modality: 'ambas', group: 'ambas', text: '¿Cuál es la canción que escuchas a escondidas y te da vergüenza admitir?' },
+  { level: 1, modality: 'ambas', group: 'ambas', text: '¿Cuál fue el examen que peor te fue en toda tu vida escolar?' },
+
+  // ---- Nivel 2 · Atrevido ----
+  { level: 2, modality: 'ambas', group: 'ambas', text: '¿Cuál fue tu último mensaje que borraste antes de enviarlo?' },
+  { level: 2, modality: 'ambas', group: 'ambas', text: '¿A quién de acá seguirías si tuvieras que elegir en una isla desierta?' },
+  { level: 2, modality: 'ambas', group: 'pareja', text: '¿Qué es algo que te encantaría que hiciéramos y nunca te animaste a pedir?' },
+  { level: 2, modality: 'ambas', group: 'ambas', text: '¿Cuál fue la última vez que sentiste celos y por qué?' },
+  { level: 2, modality: 'ambas', group: 'ambas', text: '¿Qué es lo más raro que buscaste en internet este mes?' },
+  { level: 2, modality: 'ambas', group: 'ambas', text: '¿A qué persona de tu pasado revisas el perfil de vez en cuando?' },
+  { level: 2, modality: 'ambas', group: 'ambas', text: '¿Cuál es la mentira más grande que le dijiste a tus padres?' },
+  { level: 2, modality: 'ambas', group: 'grupo', text: '¿A quién del grupo le confiarías un secreto sin dudarlo?' },
+  { level: 2, modality: 'ambas', group: 'ambas', text: '¿Qué es lo más incómodo que hiciste para caerle bien a alguien?' },
+  { level: 2, modality: 'ambas', group: 'pareja', text: '¿Qué costumbre mía te molesta pero nunca me lo dijiste?' },
+  { level: 2, modality: 'ambas', group: 'ambas', text: '¿Cuál fue la última vez que fingiste estar bien cuando no lo estabas?' },
+  { level: 2, modality: 'ambas', group: 'ambas', text: '¿A quién bloqueaste alguna vez en redes y por qué?' },
+
+  // ---- Nivel 3 · Picante ----
+  { level: 3, modality: 'ambas', group: 'ambas', text: '¿Cuál es tu mayor inseguridad en una relación?' },
+  { level: 3, modality: 'ambas', group: 'pareja', text: '¿Qué fue lo más atrevido que hiciste por alguien que te gustaba?' },
+  { level: 3, modality: 'ambas', group: 'ambas', text: '¿A quién del grupo besarías si tuvieras que elegir a alguien ahora?' },
+  { level: 3, modality: 'ambas', group: 'ambas', text: '¿Cuál es tu fantasía menos confesable?' },
+  { level: 3, modality: 'ambas', group: 'ambas', text: '¿Cuál fue la cita más incómoda que tuviste?' },
+  { level: 3, modality: 'ambas', group: 'pareja', text: '¿Qué es algo que te gustaría que te dijera más seguido?' },
+  { level: 3, modality: 'ambas', group: 'ambas', text: '¿Alguna vez sentiste algo por el amigo o la amiga de alguien de acá?' },
+  { level: 3, modality: 'ambas', group: 'ambas', text: '¿Cuál es la señal que te hace saber que alguien te gusta de verdad?' },
+  { level: 3, modality: 'ambas', group: 'pareja', text: '¿Qué fue lo que más te costó decirme desde que estamos juntos?' },
+  { level: 3, modality: 'ambas', group: 'ambas', text: '¿Cuál fue la relación que más te costó superar?' },
+
+  // ---- Nivel 4 · Extremo ----
+  { level: 4, modality: 'ambas', group: 'ambas', text: '¿Cuál es el secreto que menos personas conocen de ti?' },
+  { level: 4, modality: 'ambas', group: 'pareja', text: '¿Qué es lo que nunca me contaste porque piensas que me molestaría?' },
+  { level: 4, modality: 'ambas', group: 'ambas', text: '¿Cuál fue la situación más límite en la que estuviste por una atracción?' },
+  { level: 4, modality: 'ambas', group: 'ambas', text: '¿Cuál es el arrepentimiento más grande que tienes relacionado con otra persona?' },
+  { level: 4, modality: 'ambas', group: 'pareja', text: '¿Hay algo de nuestra relación que te gustaría que cambiara y nunca lo dijiste?' },
+  { level: 4, modality: 'ambas', group: 'ambas', text: '¿Cuál fue la vez que estuviste más cerca de hacer algo de lo que te arrepentirías?' },
+  { level: 4, modality: 'ambas', group: 'ambas', text: '¿Qué es lo que más miedo te da que la gente descubra de ti?' },
+]
+
+const DARES = [
+  // ---- Nivel 1 · Divertido ----
+  { level: 1, modality: 'ambas', group: 'ambas', text: 'Haz 10 saltos de tijera ahora mismo.', timerSeconds: 30 },
+  { level: 1, modality: 'ambas', group: 'ambas', text: 'Imita a un animal hasta que alguien adivine cuál es.', timerSeconds: 30 },
+  { level: 1, modality: 'presencial', group: 'grupo', text: 'Deja que el grupo te peine como quiera durante 1 minuto.', timerSeconds: 60 },
+  { level: 1, modality: 'ambas', group: 'ambas', text: 'Canta el estribillo de tu canción favorita.', timerSeconds: 30 },
+  { level: 1, modality: 'distancia', group: 'ambas', text: 'Muestra la última foto de tu galería (si es apta para mostrar).', timerSeconds: 20 },
+  { level: 1, modality: 'ambas', group: 'ambas', text: 'Cuenta un chiste. Si nadie se ríe, cuenta otro.', timerSeconds: 30 },
+  { level: 1, modality: 'distancia', group: 'ambas', text: 'Pon tu cámara y haz la cara más graciosa que puedas por 5 segundos.', timerSeconds: 15 },
+  { level: 1, modality: 'distancia', group: 'ambas', text: 'Muestra lo primero que encuentres en tu refrigerador.', timerSeconds: 20 },
+  { level: 1, modality: 'presencial', group: 'ambas', text: 'Camina como pingüino hasta la puerta más cercana y vuelve.', timerSeconds: 30 },
+  { level: 1, modality: 'ambas', group: 'ambas', text: 'Habla con acento durante el resto de tu turno.', timerSeconds: 30 },
+  { level: 1, modality: 'distancia', group: 'ambas', text: 'Manda un audio cantando el cumpleaños feliz a quien tengas más arriba en tus chats recientes.', timerSeconds: 30 },
+  { level: 1, modality: 'presencial', group: 'grupo', text: 'Deja que alguien del grupo te dibuje un bigote con maquillaje o lápiz por el resto de la ronda.', timerSeconds: 30 },
+  { level: 1, modality: 'ambas', group: 'ambas', text: 'Haz tu mejor imitación de un famoso hasta que alguien lo adivine.', timerSeconds: 30 },
+
+  // ---- Nivel 2 · Atrevido ----
+  { level: 2, modality: 'ambas', group: 'ambas', text: 'Mándale un mensaje al azar a alguien de tu lista de contactos: "Te extraño 🥲".', timerSeconds: 60 },
+  { level: 2, modality: 'presencial', group: 'grupo', text: 'Deja que alguien del grupo revise tu galería de fotos por 15 segundos.', timerSeconds: 15 },
+  { level: 2, modality: 'ambas', group: 'pareja', text: 'Dime 3 cosas que te gustan de mí sin repetir lo físico.', timerSeconds: 45 },
+  { level: 2, modality: 'ambas', group: 'ambas', text: 'Haz una videollamada a alguien y cantale "feliz cumpleaños" aunque no sea su cumpleaños.', timerSeconds: 45 },
+  { level: 2, modality: 'distancia', group: 'ambas', text: 'Muestra las últimas 3 fotos de tu carrete (si son aptas).', timerSeconds: 30 },
+  { level: 2, modality: 'distancia', group: 'ambas', text: 'Lee en voz alta tu último mensaje enviado a alguien que no sea del grupo.', timerSeconds: 20 },
+  { level: 2, modality: 'presencial', group: 'grupo', text: 'Deja que el grupo revise tu historial de búsquedas de los últimos 5 minutos.', timerSeconds: 20 },
+  { level: 2, modality: 'ambas', group: 'ambas', text: 'Muestra la última conversación que tuviste con tu mamá o papá, sin ocultar nada.', timerSeconds: 20 },
+  { level: 2, modality: 'ambas', group: 'pareja', text: 'Cuéntame una anécdota tuya que nunca me contaste.', timerSeconds: 60 },
+  { level: 2, modality: 'presencial', group: 'ambas', text: 'Deja que te tomen una foto sin avisarte cómo salió, y la tienes que aceptar como foto de perfil por el resto de la partida.', timerSeconds: 20 },
+  { level: 2, modality: 'distancia', group: 'ambas', text: 'Manda un mensaje de voz imitando a alguien del grupo a otra persona del grupo.', timerSeconds: 30 },
+
+  // ---- Nivel 3 · Picante ----
+  { level: 3, modality: 'presencial', group: 'ambas', text: 'Deja que te hagan un chupón donde el grupo decida (visible).', timerSeconds: 30 },
+  { level: 3, modality: 'ambas', group: 'pareja', text: 'Susúrrame algo que nunca me dijiste en voz alta.', timerSeconds: 30 },
+  { level: 3, modality: 'presencial', group: 'grupo', text: 'Baila reggaetón pegado con la persona a tu derecha por 30 segundos.', timerSeconds: 30 },
+  { level: 3, modality: 'distancia', group: 'pareja', text: 'Mándame un audio diciendo lo que te gustaría que estuviera pasando si estuviéramos juntos ahora.', timerSeconds: 45 },
+  { level: 3, modality: 'presencial', group: 'pareja', text: 'Dale un beso en el cuello a tu pareja de juego.', timerSeconds: 15 },
+  { level: 3, modality: 'distancia', group: 'pareja', text: 'Haz una videollamada y muéstrame algo que normalmente no me mostrarías (dentro de lo cómodo para vos).', timerSeconds: 40 },
+  { level: 3, modality: 'presencial', group: 'grupo', text: 'Deja que la persona a tu izquierda elija una prenda tuya para quitarte (algo que no comprometa).', timerSeconds: 20 },
+  { level: 3, modality: 'distancia', group: 'grupo', text: 'Muestra tu cuarto tal cual está ahora mismo, girando la cámara 360°.', timerSeconds: 25 },
+  { level: 3, modality: 'distancia', group: 'grupo', text: 'Cuéntale al grupo, con lujo de detalle, tu peor cita a ciegas.', timerSeconds: 45 },
+  { level: 3, modality: 'ambas', group: 'pareja', text: 'Describe en voz alta lo que más te atrae físicamente de mí, con detalle.', timerSeconds: 40 },
+  { level: 3, modality: 'presencial', group: 'ambas', text: 'Deja que alguien te dé un masaje de hombros por 30 segundos.', timerSeconds: 30 },
+
+  // ---- Nivel 4 · Extremo ----
+  { level: 4, modality: 'presencial', group: 'pareja', text: 'Dale un beso de 10 segundos a tu pareja de juego.', timerSeconds: 10 },
+  { level: 4, modality: 'ambas', group: 'pareja', text: 'Descríbeme en detalle tu cita ideal conmigo, sin cortarte.', timerSeconds: 60 },
+  { level: 4, modality: 'presencial', group: 'grupo', text: 'Deja que alguien del grupo te dé una orden (dentro de lo razonable) y cúmplela.', timerSeconds: 45 },
+  { level: 4, modality: 'presencial', group: 'pareja', text: 'Siéntate en las piernas de tu pareja de juego durante el resto de tu turno.', timerSeconds: 20 },
+  { level: 4, modality: 'distancia', group: 'pareja', text: 'Manda un audio de un minuto describiendo, sin cortarte, qué harías si estuviéramos solos ahora mismo.', timerSeconds: 60 },
+  { level: 4, modality: 'presencial', group: 'ambas', text: 'Deja que el grupo elija una parte de tu cuerpo para que te hagan un masaje de 20 segundos.', timerSeconds: 20 },
+  { level: 4, modality: 'distancia', group: 'grupo', text: 'Manda al grupo un audio confesando cuál fue tu peor decisión relacionada con una atracción.', timerSeconds: 45 },
+  { level: 4, modality: 'ambas', group: 'pareja', text: 'Confiesa cuál ha sido el momento más íntimo que recuerdas entre nosotros, con todo el detalle que te animes a dar.', timerSeconds: 45 },
+]
+
+function pickCard({ type, level, modality, group, history, customCards = [] }) {
+  const base = type === 'truth' ? TRUTHS : DARES
+  const custom = customCards.filter((c) => c.type === type && c.level === level)
+
+  // Búsqueda progresiva: exacto → ignora grupo → ignora modalidad → cualquier carta del nivel.
+  // Así el juego nunca se queda sin nada que mostrar, aunque falte contenido para una combinación puntual.
+  const strategies = [
+    (c) => c.level === level && (c.modality === 'ambas' || c.modality === modality) && (c.group === 'ambas' || c.group === group),
+    (c) => c.level === level && (c.modality === 'ambas' || c.modality === modality),
+    (c) => c.level === level && (c.group === 'ambas' || c.group === group),
+    (c) => c.level === level,
+  ]
+
+  for (const matches of strategies) {
+    const pool = [...base.filter(matches), ...custom.filter(matches)]
+    if (pool.length === 0) continue
+    const unused = pool.filter((c) => !history.includes(c.text))
+    const source = unused.length > 0 ? unused : pool
+    return source[Math.floor(Math.random() * source.length)]
+  }
+  return null
+}
+
+// ==== src/lib/clientId.js ====
+const STORAGE_KEY = 'vor_client_id'
+
+function randomId() {
+  if (typeof crypto !== 'undefined' && crypto.randomUUID) return crypto.randomUUID()
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0
+    const v = c === 'x' ? r : (r & 0x3) | 0x8
+    return v.toString(16)
+  })
+}
+
+// Cada dispositivo/navegador tiene un id propio que persiste entre partidas,
+// así si alguien recarga la página durante una partida online puede reconectarse
+// a la misma sala sin perder su lugar.
+function getClientId() {
+  let id = localStorage.getItem(STORAGE_KEY)
+  if (!id) {
+    id = randomId()
+    localStorage.setItem(STORAGE_KEY, id)
+  }
+  return id
+}
+
+// ==== src/components/Confetti.jsx ====
+const COLORS = ['#ff2d78', '#ffd23f', '#7b3fe4', '#f5efff']
+
+function Confetti({ count = 40 }) {
+  const pieces = Array.from({ length: count }, (_, i) => {
+    const left = Math.random() * 100
+    const delay = Math.random() * 0.4
+    const duration = 1.6 + Math.random() * 1.2
+    const size = 6 + Math.random() * 6
+    const color = COLORS[i % COLORS.length]
+    const fall = 420 + Math.random() * 220
+    const spin = 360 + Math.random() * 540
+    return { id: i, left, delay, duration, size, color, fall, spin }
+  })
+
+  return (
+    <div className="confetti-layer" aria-hidden="true">
+      {pieces.map((p) => (
+        <span
+          key={p.id}
+          className="confetti-piece"
+          style={{
+            left: `${p.left}%`,
+            width: p.size,
+            height: p.size * 0.4,
+            background: p.color,
+            animationDelay: `${p.delay}s`,
+            animationDuration: `${p.duration}s`,
+            '--fall-distance': `${p.fall}px`,
+            '--spin': `${p.spin}deg`,
+          }}
+        />
+      ))}
+    </div>
+  )
+}
+
+// ==== src/components/BackgroundBlobs.jsx ====
+function BackgroundBlobs() {
+  return (
+    <div className="bg-blobs" aria-hidden="true">
+      <div className="bg-blob bg-blob--pink" />
+      <div className="bg-blob bg-blob--yellow" />
+      <div className="bg-blob bg-blob--violet" />
+    </div>
+  )
+}
+
+// ==== src/lib/sound.js ====
+let ctx = null
+let enabled = true
+try {
+  const stored = localStorage.getItem('vor_effects_enabled')
+  enabled = stored === null ? true : stored === '1'
+} catch {
+  // localStorage puede no estar disponible (modo privado, etc.); seguimos con sonido activado
+}
+
+function isEffectsEnabled() {
+  return enabled
+}
+
+function setEffectsEnabled(value) {
+  enabled = value
+  try {
+    localStorage.setItem('vor_effects_enabled', value ? '1' : '0')
+  } catch {
+    // no pasa nada si no se puede persistir
+  }
+}
+
+function getCtx() {
+  if (!enabled) return null
+  if (!ctx) {
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext
+    if (!AudioContextClass) return null
+    ctx = new AudioContextClass()
+  }
+  if (ctx.state === 'suspended') ctx.resume()
+  return ctx
+}
+
+function tone({ freq, duration = 0.12, type = 'sine', volume = 0.16, delay = 0, freqEnd }) {
+  const audioCtx = getCtx()
+  if (!audioCtx) return
+  const osc = audioCtx.createOscillator()
+  const gain = audioCtx.createGain()
+  osc.type = type
+  const startTime = audioCtx.currentTime + delay
+  osc.frequency.setValueAtTime(freq, startTime)
+  if (freqEnd) osc.frequency.exponentialRampToValueAtTime(freqEnd, startTime + duration)
+  gain.gain.setValueAtTime(volume, startTime)
+  gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration)
+  osc.connect(gain)
+  gain.connect(audioCtx.destination)
+  osc.start(startTime)
+  osc.stop(startTime + duration + 0.03)
+}
+
+// Microinteracción genérica: click de botón, breve y discreto
+function playClick() {
+  tone({ freq: 720, duration: 0.05, type: 'square', volume: 0.05 })
+}
+
+function playTick() {
+  tone({ freq: 900, duration: 0.03, type: 'square', volume: 0.05 })
+}
+
+function playCountdownTick(urgent) {
+  tone({ freq: urgent ? 1100 : 850, duration: 0.05, type: 'square', volume: urgent ? 0.09 : 0.05 })
+}
+
+function playBuzzer() {
+  tone({ freq: 220, duration: 0.35, type: 'square', volume: 0.13 })
+}
+
+// Ruleta aterrizando
+function playLand() {
+  tone({ freq: 660, duration: 0.14, type: 'triangle', volume: 0.15 })
+  tone({ freq: 880, duration: 0.18, type: 'triangle', volume: 0.13, delay: 0.06 })
+}
+
+// Se revela una carta nueva
+function playReveal() {
+  tone({ freq: 440, freqEnd: 660, duration: 0.22, type: 'sine', volume: 0.13 })
+}
+
+function playSuccess() {
+  tone({ freq: 523, duration: 0.1, type: 'sine', volume: 0.15 })
+  tone({ freq: 659, duration: 0.1, type: 'sine', volume: 0.15, delay: 0.09 })
+  tone({ freq: 784, duration: 0.16, type: 'sine', volume: 0.15, delay: 0.18 })
+}
+
+function playFail() {
+  tone({ freq: 300, freqEnd: 160, duration: 0.28, type: 'sawtooth', volume: 0.09 })
+}
+
+function playVictory() {
+  ;[523, 659, 784, 1046].forEach((freq, i) => tone({ freq, duration: 0.2, type: 'sine', volume: 0.14, delay: i * 0.12 }))
+}
+
+// ==== src/lib/haptics.js ====
+function vibrate(pattern) {
+  if (!isEffectsEnabled()) return
+  if (typeof navigator !== 'undefined' && navigator.vibrate) {
+    try {
+      navigator.vibrate(pattern)
+    } catch {
+      // algunos navegadores lanzan si se llama fuera de un gesto del usuario; lo ignoramos
+    }
+  }
+}
+
+// ==== src/lib/supabase.js (adaptado para archivo único) ====
+const SUPABASE_URL = 'https://mysqkhttdquwicrsjcmg.supabase.co'
+const SUPABASE_ANON_KEY = 'PEGA_AQUI_TU_ANON_KEY'
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+
+
+// ==== src/lib/community.js ====
+async function fetchApprovedCards({ group, modality }) {
+  let query = supabaseClient.from('community_cards').select('*').eq('status', 'approved')
+  if (group) query = query.in('group_mode', ['ambas', group])
+  if (modality) query = query.in('modality', ['ambas', modality])
+  const { data, error } = await query.order('likes_count', { ascending: false })
+  return { data: data ?? [], error }
+}
+
+async function fetchMyCards(userId) {
+  const { data, error } = await supabase
+    .from('community_cards')
+    .select('*')
+    .eq('author_id', userId)
+    .order('created_at', { ascending: false })
+  return { data: data ?? [], error }
+}
+
+async function fetchPendingCards() {
+  const { data, error } = await supabase
+    .from('community_cards')
+    .select('*')
+    .eq('status', 'pending')
+    .order('created_at', { ascending: true })
+  return { data: data ?? [], error }
+}
+
+async function fetchMyLikedCardIds(userId) {
+  const { data } = await supabaseClient.from('community_card_likes').select('card_id').eq('user_id', userId)
+  return new Set((data ?? []).map((r) => r.card_id))
+}
+
+async function submitCard({ authorId, type, level, groupMode, modality, text, timerSeconds }) {
+  return supabase
+    .from('community_cards')
+    .insert({
+      author_id: authorId,
+      type,
+      level,
+      group_mode: groupMode,
+      modality,
+      text,
+      timer_seconds: type === 'dare' ? timerSeconds : null,
+    })
+    .select()
+    .single()
+}
+
+async function toggleCardLike(cardId) {
+  const { data, error } = await supabaseClient.rpc('toggle_card_like', { p_card_id: cardId })
+  return { liked: data, error }
+}
+
+async function incrementCardUses(cardId) {
+  await supabaseClient.rpc('increment_card_uses', { p_card_id: cardId })
+}
+
+async function moderateCard(cardId, status) {
+  return supabaseClient.from('community_cards').update({ status }).eq('id', cardId).select().single()
+}
+
+// ==== src/state/gameContext.jsx ====
+const GameContext = createContext(null)
+
+const FIXED_ROUNDS = 5
+
+const initialState = {
+  screen: 'home', // home | setup | players | custom | roulette | challenge | results
+  group: null, // 'pareja' | 'grupo'
+  modality: null, // 'presencial' | 'distancia'
+  players: [], // { id, name, score }
+  customCards: [], // { id, type: 'truth'|'dare', level, text, timerSeconds }
+  totalTurns: 0,
+  turnIndex: 0,
+  turnQueue: [], // ids pendientes en el ciclo actual, para repartir turnos parejo
+  currentPlayerId: null,
+  choice: null, // 'truth' | 'dare'
+  level: null,
+  card: null,
+  cardHistory: [],
+  statsThisGame: { truths: 0, daresCompleted: 0, daresFailed: 0 },
+  communityEnabled: false,
+  communityCards: [], // cartas aprobadas de la comunidad, cargadas al activar el toggle
+}
+
+function shuffledIds(players) {
+  const ids = players.map((p) => p.id)
+  for (let i = ids.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[ids[i], ids[j]] = [ids[j], ids[i]]
+  }
+  return ids
+}
+
+function reducer(state, action) {
+  switch (action.type) {
+    case 'GO_SETUP':
+      return { ...initialState, screen: 'setup' }
+    case 'SET_GROUP':
+      return { ...state, group: action.group }
+    case 'SET_MODALITY':
+      return { ...state, modality: action.modality, screen: 'players' }
+    case 'ADD_PLAYER': {
+      const name = action.name.trim()
+      if (!name) return state
+      const id = Date.now() + Math.random()
+      return { ...state, players: [...state.players, { id, name, score: 0 }] }
+    }
+    case 'REMOVE_PLAYER':
+      return { ...state, players: state.players.filter((p) => p.id !== action.id) }
+    case 'GO_CUSTOM':
+      return { ...state, screen: 'custom' }
+    case 'BACK_TO_PLAYERS':
+      return { ...state, screen: 'players' }
+    case 'ADD_CUSTOM_CARD': {
+      const text = action.text.trim()
+      if (!text) return state
+      const card = {
+        id: Date.now() + Math.random(),
+        type: action.cardType,
+        level: action.level,
+        text,
+        timerSeconds: action.cardType === 'dare' ? action.timerSeconds || 30 : undefined,
+      }
+      return { ...state, customCards: [...state.customCards, card] }
+    }
+    case 'REMOVE_CUSTOM_CARD':
+      return { ...state, customCards: state.customCards.filter((c) => c.id !== action.id) }
+    case 'SET_COMMUNITY_ENABLED':
+      return { ...state, communityEnabled: action.enabled, communityCards: action.enabled ? state.communityCards : [] }
+    case 'SET_COMMUNITY_CARDS':
+      return { ...state, communityCards: action.cards }
+    case 'START_GAME':
+      return {
+        ...state,
+        screen: 'roulette',
+        totalTurns: Math.min(FIXED_ROUNDS, state.players.length > 0 ? FIXED_ROUNDS : 0),
+        turnIndex: 0,
+        turnQueue: shuffledIds(state.players),
+      }
+    case 'SPIN_RESULT': {
+      let queue = state.turnQueue.filter((id) => id !== action.playerId)
+      if (queue.length === 0) queue = shuffledIds(state.players)
+      return {
+        ...state,
+        currentPlayerId: action.playerId,
+        turnQueue: queue,
+        screen: 'challenge',
+        choice: null,
+        level: null,
+        card: null,
+      }
+    }
+    case 'CHOOSE_TYPE':
+      return { ...state, choice: action.choice }
+    case 'SELECT_LEVEL': {
+      const card = pickCard({
+        type: state.choice,
+        level: action.level,
+        modality: state.modality,
+        group: state.group,
+        history: state.cardHistory,
+        customCards: [...state.customCards, ...(state.communityEnabled ? state.communityCards : [])],
+      })
+      return { ...state, level: action.level, card }
+    }
+    case 'REDRAW_CARD': {
+      const card = pickCard({
+        type: state.choice,
+        level: state.level,
+        modality: state.modality,
+        group: state.group,
+        history: state.cardHistory,
+        customCards: [...state.customCards, ...(state.communityEnabled ? state.communityCards : [])],
+      })
+      return { ...state, card }
+    }
+    case 'MARK_RESULT': {
+      const players = state.players.map((p) =>
+        p.id === state.currentPlayerId && action.fulfilled ? { ...p, score: p.score + 1 } : p
+      )
+      const cardHistory = state.card ? [...state.cardHistory, state.card.text] : state.cardHistory
+      if (state.card?.communityId) incrementCardUses(state.card.communityId) // fire-and-forget
+      const nextTurnIndex = state.turnIndex + 1
+      const done = nextTurnIndex >= state.totalTurns
+      const statsThisGame = { ...state.statsThisGame }
+      if (state.choice === 'truth') statsThisGame.truths += 1
+      else if (state.choice === 'dare') {
+        if (action.fulfilled) statsThisGame.daresCompleted += 1
+        else statsThisGame.daresFailed += 1
+      }
+      return {
+        ...state,
+        players,
+        cardHistory,
+        turnIndex: nextTurnIndex,
+        screen: done ? 'results' : 'roulette',
+        statsThisGame,
+      }
+    }
+    case 'PLAY_AGAIN':
+      return {
+        ...initialState,
+        screen: 'setup',
+      }
+    case 'GO_HOME':
+      return { ...initialState }
+    default:
+      return state
+  }
+}
+
+function GameProvider({ children }) {
+  const [state, dispatch] = useReducer(reducer, initialState)
+  return <GameContext.Provider value={{ state, dispatch }}>{children}</GameContext.Provider>
+}
+
+function useGame() {
+  const ctx = useContext(GameContext)
+  if (!ctx) throw new Error('useGame debe usarse dentro de GameProvider')
+  return ctx
+}
+
+// ==== src/state/authContext.jsx ====
+const AuthContext = createContext(null)
+
+const AVATAR_EMOJIS = ['🦊', '🐼', '🦁', '🐸', '🐨', '🐯', '🐵', '🐰', '🐺', '🐱', '🐶', '🦄']
+const AVATAR_COLORS = ['#ff2d78', '#ffd23f', '#7b3fe4', '#5a2f9e', '#331d61', '#f5efff']
+
+function AuthProvider({ children }) {
+  const [session, setSession] = useState(undefined) // undefined = cargando, null = sin sesión
+  const [profile, setProfile] = useState(null)
+  const [loadingProfile, setLoadingProfile] = useState(false)
+
+  useEffect(() => {
+    supabaseClient.auth.getSession().then(({ data }) => setSession(data.session))
+    const { data: sub } = supabaseClient.auth.onAuthStateChange((_event, newSession) => {
+      setSession(newSession)
+    })
+    return () => sub.subscription.unsubscribe()
+  }, [])
+
+  useEffect(() => {
+    const userId = session?.user?.id
+    if (!userId) {
+      setProfile(null)
+      return
+    }
+    let cancelled = false
+    setLoadingProfile(true)
+    async function loadProfile() {
+      // La fila de perfil la crea un trigger en el signup; puede tardar un instante en aparecer.
+      for (let attempt = 0; attempt < 5; attempt++) {
+        const { data } = await supabaseClient.from('profiles').select('*').eq('id', userId).maybeSingle()
+        if (cancelled) return
+        if (data) {
+          setProfile(data)
+          setLoadingProfile(false)
+          return
+        }
+        await new Promise((r) => setTimeout(r, 400))
+      }
+      setLoadingProfile(false)
+    }
+    loadProfile()
+    return () => {
+      cancelled = true
+    }
+  }, [session?.user?.id])
+
+  async function signInWithGoogle() {
+    await supabaseClient.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.href } })
+  }
+
+  async function signInAsGuest() {
+    await supabaseClient.auth.signInAnonymously()
+  }
+
+  async function signOut() {
+    await supabaseClient.auth.signOut()
+    setProfile(null)
+  }
+
+  async function updateProfile(patch) {
+    if (!session?.user?.id) return
+    const { data, error } = await supabaseClient.from('profiles').update(patch).eq('id', session.user.id).select().single()
+    if (!error) setProfile(data)
+    return { data, error }
+  }
+
+  // Se llama al terminar una partida (rápida u online, si el anfitrión tiene sesión)
+  // para sumar la actividad al perfil.
+  async function recordGameResult({ truths = 0, daresCompleted = 0, daresFailed = 0, points = 0 }) {
+    if (!session?.user?.id || !profile) return
+    const patch = {
+      games_played: profile.games_played + 1,
+      truths_answered: profile.truths_answered + truths,
+      dares_completed: profile.dares_completed + daresCompleted,
+      dares_failed: profile.dares_failed + daresFailed,
+      points_total: profile.points_total + points,
+    }
+    await updateProfile(patch)
+  }
+
+  const value = {
+    session,
+    user: session?.user ?? null,
+    isLoadingSession: session === undefined,
+    profile,
+    loadingProfile,
+    signInWithGoogle,
+    signInAsGuest,
+    signOut,
+    updateProfile,
+    recordGameResult,
+  }
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
+}
+
+function useAuth() {
+  const ctx = useContext(AuthContext)
+  if (!ctx) throw new Error('useAuth debe usarse dentro de AuthProvider')
+  return ctx
+}
+
+// ==== src/screens/account/SignInScreen.jsx ====
+function SignInScreen({ onBack }) {
+  const { signInWithGoogle, signInAsGuest } = useAuth()
+
+  return (
+    <div className="screen" style={{ justifyContent: 'center', gap: 24 }}>
+      <div className="top-bar">
+        <button className="back-btn" onClick={onBack}>
+          ‹ Volver
+        </button>
+      </div>
+
+      <div style={{ textAlign: 'center' }}>
+        <span style={{ fontSize: 48 }}>🙋</span>
+        <p className="eyebrow" style={{ marginTop: 10 }}>Tu cuenta</p>
+        <h2 className="title" style={{ fontSize: 26 }}>
+          Guardá tu progreso
+        </h2>
+        <p className="subtitle" style={{ marginTop: 6 }}>
+          Con una cuenta vas a poder personalizar tu avatar y ver tus estadísticas.
+        </p>
+      </div>
+
+      <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 12 }}>
+        <button className="btn btn-primary btn-block" onClick={signInWithGoogle}>
+          Continuar con Google
+        </button>
+        <button className="btn btn-secondary btn-block" onClick={signInAsGuest}>
+          Jugar como invitado
+        </button>
+      </div>
+
+      <p className="subtitle" style={{ textAlign: 'center', fontSize: 12.5 }}>
+        Jugar como invitado no requiere datos personales, pero tu progreso queda
+        atado a este dispositivo.
+      </p>
+    </div>
+  )
+}
+
+// ==== src/screens/account/ProfileScreen.jsx ====
+function ProfileScreen({ onBack }) {
+  const { profile, loadingProfile, updateProfile, signOut } = useAuth()
+  const [name, setName] = useState(profile?.username ?? '')
+  const [emoji, setEmoji] = useState(profile?.avatar_emoji ?? AVATAR_EMOJIS[0])
+  const [color, setColor] = useState(profile?.avatar_color ?? AVATAR_COLORS[0])
+  const [saving, setSaving] = useState(false)
+  const [saved, setSaved] = useState(false)
+
+  if (loadingProfile || !profile) {
+    return (
+      <div className="screen" style={{ alignItems: 'center', justifyContent: 'center' }}>
+        <p className="subtitle">Cargando tu perfil…</p>
+      </div>
+    )
+  }
+
+  const dirty = name.trim() !== profile.username || emoji !== profile.avatar_emoji || color !== profile.avatar_color
+
+  async function handleSave() {
+    if (!name.trim() || saving) return
+    setSaving(true)
+    await updateProfile({ username: name.trim(), avatar_emoji: emoji, avatar_color: color })
+    setSaving(false)
+    setSaved(true)
+    setTimeout(() => setSaved(false), 1800)
+  }
+
+  const stats = [
+    { label: 'Partidas jugadas', value: profile.games_played },
+    { label: 'Verdades respondidas', value: profile.truths_answered },
+    { label: 'Retos cumplidos', value: profile.dares_completed },
+    { label: 'Retos no cumplidos', value: profile.dares_failed },
+    { label: 'Puntos acumulados', value: profile.points_total },
+  ]
+
+  return (
+    <div className="screen">
+      <div className="top-bar">
+        <button className="back-btn" onClick={onBack}>
+          ‹ Volver
+        </button>
+      </div>
+
+      <div style={{ textAlign: 'center' }}>
+        <div
+          style={{
+            width: 84,
+            height: 84,
+            borderRadius: '50%',
+            background: color,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: 40,
+            margin: '0 auto',
+            border: '3px solid rgba(255,255,255,0.2)',
+          }}
+        >
+          {emoji}
+        </div>
+        {profile.is_anonymous && (
+          <p className="subtitle" style={{ marginTop: 10, fontSize: 12.5 }}>
+            Estás jugando como invitado. Tu progreso queda atado a este dispositivo.
+          </p>
+        )}
+      </div>
+
+      <div>
+        <p className="subtitle" style={{ marginBottom: 10 }}>Nombre de usuario</p>
+        <input className="text-input" value={name} maxLength={20} onChange={(e) => setName(e.target.value)} />
+      </div>
+
+      <div>
+        <p className="subtitle" style={{ marginBottom: 10 }}>Avatar</p>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 12 }}>
+          {AVATAR_EMOJIS.map((e) => (
+            <button
+              key={e}
+              onClick={() => setEmoji(e)}
+              style={{
+                width: 44,
+                height: 44,
+                borderRadius: 12,
+                fontSize: 22,
+                background: e === emoji ? 'rgba(255,255,255,0.16)' : 'rgba(255,255,255,0.06)',
+                border: e === emoji ? '2px solid var(--accent-pink)' : '1.5px solid rgba(255,255,255,0.1)',
+              }}
+            >
+              {e}
+            </button>
+          ))}
+        </div>
+        <div style={{ display: 'flex', gap: 8 }}>
+          {AVATAR_COLORS.map((c) => (
+            <button
+              key={c}
+              onClick={() => setColor(c)}
+              aria-label={`Color ${c}`}
+              style={{
+                width: 32,
+                height: 32,
+                borderRadius: '50%',
+                background: c,
+                border: c === color ? '3px solid #fff' : '1.5px solid rgba(255,255,255,0.3)',
+              }}
+            />
+          ))}
+        </div>
+      </div>
+
+      <button className="btn btn-primary btn-block" disabled={!dirty || !name.trim() || saving} onClick={handleSave}>
+        {saving ? 'Guardando…' : saved ? '¡Guardado! ✓' : 'Guardar cambios'}
+      </button>
+
+      <div>
+        <p className="subtitle" style={{ marginBottom: 10 }}>Estadísticas</p>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          {stats.map((s) => (
+            <div
+              key={s.label}
+              className="card"
+              style={{ padding: '12px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
+            >
+              <span className="label" style={{ fontSize: 14 }}>{s.label}</span>
+              <span style={{ fontWeight: 700, color: 'var(--accent-yellow)' }}>{s.value}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <button className="btn btn-secondary btn-block" onClick={signOut}>
+        Cerrar sesión
+      </button>
+    </div>
+  )
+}
+
+// ==== src/screens/community/CommunityScreen.jsx ====
+const TYPE_LABEL = { truth: 'Verdad', dare: 'Reto' }
+
+function CommunityScreen({ onBack, onCreate, onModerate }) {
+  const { user, profile } = useAuth()
+  const [cards, setCards] = useState([])
+  const [likedIds, setLikedIds] = useState(new Set())
+  const [loading, setLoading] = useState(true)
+  const [typeFilter, setTypeFilter] = useState('all') // all | truth | dare
+
+  useEffect(() => {
+    let cancelled = false
+    async function load() {
+      setLoading(true)
+      const { data } = await fetchApprovedCards({})
+      if (cancelled) return
+      setCards(data)
+      if (user) setLikedIds(await fetchMyLikedCardIds(user.id))
+      setLoading(false)
+    }
+    load()
+    return () => {
+      cancelled = true
+    }
+  }, [user])
+
+  async function handleLike(cardId) {
+    if (!user) return
+    const wasLiked = likedIds.has(cardId)
+    // optimista: refleja el cambio antes de la respuesta del servidor
+    setLikedIds((prev) => {
+      const next = new Set(prev)
+      wasLiked ? next.delete(cardId) : next.add(cardId)
+      return next
+    })
+    setCards((prev) =>
+      prev.map((c) => (c.id === cardId ? { ...c, likes_count: c.likes_count + (wasLiked ? -1 : 1) } : c))
+    )
+    await toggleCardLike(cardId)
+  }
+
+  const visible = cards.filter((c) => typeFilter === 'all' || c.type === typeFilter)
+
+  return (
+    <div className="screen">
+      <div className="top-bar">
+        <button className="back-btn" onClick={onBack}>
+          ‹ Volver
+        </button>
+        {profile?.is_admin && (
+          <button className="progress-pill" onClick={onModerate}>
+            Moderar
+          </button>
+        )}
+      </div>
+
+      <div>
+        <p className="eyebrow">Contenido de la comunidad</p>
+        <h2 className="title" style={{ fontSize: 26 }}>
+          Preguntas y retos de otros jugadores
+        </h2>
+      </div>
+
+      <div className="option-grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
+        {[
+          { id: 'all', label: 'Todas' },
+          { id: 'truth', label: 'Verdad' },
+          { id: 'dare', label: 'Reto' },
+        ].map((f) => (
+          <button
+            key={f.id}
+            className={`option-card ${typeFilter === f.id ? 'selected' : ''}`}
+            style={{ padding: '10px 6px' }}
+            onClick={() => setTypeFilter(f.id)}
+          >
+            <span className="label" style={{ fontSize: 13.5 }}>{f.label}</span>
+          </button>
+        ))}
+      </div>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8, flex: 1, overflowY: 'auto' }}>
+        {loading && <p className="subtitle" style={{ textAlign: 'center' }}>Cargando…</p>}
+        {!loading && visible.length === 0 && (
+          <p className="subtitle" style={{ textAlign: 'center', marginTop: 12 }}>
+            Todavía no hay cartas aprobadas de la comunidad.
+          </p>
+        )}
+        {visible.map((c) => (
+          <div key={c.id} className="card" style={{ padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: 6 }}>
+            <span style={{ fontSize: 13.5 }}>
+              <strong>{TYPE_LABEL[c.type]} · N{c.level}</strong>
+              <br />
+              {c.text}
+            </span>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <span className="subtitle" style={{ fontSize: 12 }}>Usada {c.uses_count} veces</span>
+              <button
+                onClick={() => handleLike(c.id)}
+                disabled={!user}
+                style={{ background: 'none', border: 'none', display: 'flex', alignItems: 'center', gap: 4, padding: 6 }}
+              >
+                <span style={{ fontSize: 16 }}>{likedIds.has(c.id) ? '❤️' : '🤍'}</span>
+                <span style={{ fontSize: 13, fontWeight: 700 }}>{c.likes_count}</span>
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <button className="btn btn-primary btn-block" onClick={onCreate}>
+        + Enviar una pregunta o reto
+      </button>
+    </div>
+  )
+}
+
+// ==== src/screens/community/CreateCommunityCardScreen.jsx ====
+function CreateCommunityCardScreen({ onBack }) {
+  const { user } = useAuth()
+  const [type, setType] = useState('truth')
+  const [level, setLevel] = useState(1)
+  const [text, setText] = useState('')
+  const [timerSeconds, setTimerSeconds] = useState(30)
+  const [submitting, setSubmitting] = useState(false)
+  const [sent, setSent] = useState(false)
+
+  if (!user) return <SignInScreen onBack={onBack} />
+
+  async function handleSubmit(e) {
+    e.preventDefault()
+    if (!text.trim() || submitting) return
+    setSubmitting(true)
+    const { error } = await submitCard({
+      authorId: user.id,
+      type,
+      level,
+      groupMode: 'ambas',
+      modality: 'ambas',
+      text: text.trim(),
+      timerSeconds,
+    })
+    setSubmitting(false)
+    if (!error) {
+      setSent(true)
+      setText('')
+    }
+  }
+
+  if (sent) {
+    return (
+      <div className="screen" style={{ alignItems: 'center', justifyContent: 'center', textAlign: 'center', gap: 16 }}>
+        <span style={{ fontSize: 44 }}>📨</span>
+        <h2 className="title" style={{ fontSize: 24 }}>¡Enviada!</h2>
+        <p className="subtitle">
+          Tu carta va a pasar por revisión antes de aparecer para el resto de la comunidad.
+        </p>
+        <button className="btn btn-primary btn-block" onClick={() => setSent(false)}>
+          Enviar otra
+        </button>
+        <button className="btn btn-secondary btn-block" onClick={onBack}>
+          Volver
+        </button>
+      </div>
+    )
+  }
+
+  return (
+    <div className="screen">
+      <div className="top-bar">
+        <button className="back-btn" onClick={onBack}>
+          ‹ Volver
+        </button>
+      </div>
+
+      <div>
+        <p className="eyebrow">Contenido de la comunidad</p>
+        <h2 className="title" style={{ fontSize: 24 }}>
+          Compartí una pregunta o reto
+        </h2>
+        <p className="subtitle" style={{ marginTop: 6 }}>
+          Se revisa antes de publicarse para el resto de los jugadores.
+        </p>
+      </div>
+
+      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+        <div className="option-grid">
+          <button type="button" className={`option-card ${type === 'truth' ? 'selected' : ''}`} onClick={() => setType('truth')}>
+            <span className="icon">🗣️</span>
+            <span className="label">Verdad</span>
+          </button>
+          <button type="button" className={`option-card ${type === 'dare' ? 'selected' : ''}`} onClick={() => setType('dare')}>
+            <span className="icon">🔥</span>
+            <span className="label">Reto</span>
+          </button>
+        </div>
+
+        <div>
+          <p className="subtitle" style={{ marginBottom: 8 }}>Nivel de intensidad</p>
+          <div style={{ display: 'flex', gap: 8 }}>
+            {LEVELS.map((lvl) => (
+              <button
+                key={lvl.id}
+                type="button"
+                onClick={() => setLevel(lvl.id)}
+                className="btn"
+                style={{
+                  flex: 1,
+                  padding: '10px 6px',
+                  fontSize: 14,
+                  background: level === lvl.id ? 'var(--accent-pink)' : 'rgba(255,255,255,0.06)',
+                  color: level === lvl.id ? '#fff' : 'var(--text-muted)',
+                }}
+              >
+                {lvl.id}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <textarea
+          className="text-input"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          placeholder={type === 'truth' ? 'Escribí la pregunta…' : 'Escribí el reto…'}
+          rows={3}
+          maxLength={220}
+          style={{ resize: 'vertical' }}
+        />
+
+        {type === 'dare' && (
+          <div>
+            <p className="subtitle" style={{ marginBottom: 8 }}>
+              Tiempo para cumplirlo: {timerSeconds}s
+            </p>
+            <input
+              type="range"
+              min={10}
+              max={120}
+              step={5}
+              value={timerSeconds}
+              onChange={(e) => setTimerSeconds(Number(e.target.value))}
+              style={{ width: '100%' }}
+            />
+          </div>
+        )}
+
+        <button type="submit" className="btn btn-yellow btn-block" disabled={!text.trim() || submitting}>
+          {submitting ? 'Enviando…' : 'Enviar a revisión'}
+        </button>
+      </form>
+    </div>
+  )
+}
+
+// ==== src/screens/community/AdminModerationScreen.jsx ====
+function AdminModerationScreen({ onBack }) {
+  const [pending, setPending] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  async function load() {
+    setLoading(true)
+    const { data } = await fetchPendingCards()
+    setPending(data)
+    setLoading(false)
+  }
+
+  useEffect(() => {
+    load()
+  }, [])
+
+  async function decide(cardId, status) {
+    setPending((prev) => prev.filter((c) => c.id !== cardId))
+    await moderateCard(cardId, status)
+  }
+
+  return (
+    <div className="screen">
+      <div className="top-bar">
+        <button className="back-btn" onClick={onBack}>
+          ‹ Volver
+        </button>
+      </div>
+
+      <div>
+        <p className="eyebrow">Panel de moderación</p>
+        <h2 className="title" style={{ fontSize: 24 }}>
+          Cartas pendientes de revisión
+        </h2>
+      </div>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10, flex: 1, overflowY: 'auto' }}>
+        {loading && <p className="subtitle" style={{ textAlign: 'center' }}>Cargando…</p>}
+        {!loading && pending.length === 0 && (
+          <p className="subtitle" style={{ textAlign: 'center', marginTop: 12 }}>
+            No hay nada pendiente de revisión. 🎉
+          </p>
+        )}
+        {pending.map((c) => (
+          <div key={c.id} className="card" style={{ padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <span style={{ fontSize: 13.5 }}>
+              <strong>{TYPE_LABEL[c.type]} · N{c.level}</strong>
+              <br />
+              {c.text}
+            </span>
+            <div style={{ display: 'flex', gap: 8 }}>
+              <button className="btn btn-secondary" style={{ flex: 1 }} onClick={() => decide(c.id, 'rejected')}>
+                Rechazar
+              </button>
+              <button className="btn btn-primary" style={{ flex: 1 }} onClick={() => decide(c.id, 'approved')}>
+                Aprobar
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+// ==== src/state/onlineGameContext.jsx ====
+const OnlineGameContext = createContext(null)
+
+const ONLINE_FIXED_ROUNDS = 5
+
+const emptyGameState = {
+  screen: 'roulette', // roulette | challenge | results
+  totalTurns: ONLINE_FIXED_ROUNDS,
+  turnIndex: 0,
+  turnQueue: [],
+  currentPlayerId: null,
+  choice: null,
+  level: null,
+  card: null,
+  fulfilled: null,
+  cardHistory: [],
+}
+
+function shuffleArray(ids) {
+  const arr = [...ids]
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[arr[i], arr[j]] = [arr[j], arr[i]]
+  }
+  return arr
+}
+
+function makeRoomCode() {
+  // sin caracteres ambiguos (0/O, 1/I) para que sea fácil de dictar/tipear
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
+  let code = ''
+  for (let i = 0; i < 5; i++) code += chars[Math.floor(Math.random() * chars.length)]
+  return code
+}
+
+function OnlineGameProvider({ children }) {
+  const clientId = getClientId()
+  const [status, setStatus] = useState('idle') // idle | home | lobby | playing | error
+  const [error, setError] = useState(null)
+  const [room, setRoom] = useState(null) // fila de la tabla rooms
+  const [players, setPlayers] = useState([]) // filas de room_players
+  const channelRef = useRef(null)
+
+  const isHost = !!room && room.host_client_id === clientId
+  const gameState = room?.state ?? emptyGameState
+  const me = players.find((p) => p.client_id === clientId) ?? null
+  const isMyTurn = !!room && gameState.currentPlayerId === clientId
+
+  const subscribeToRoom = useCallback((roomId) => {
+    if (channelRef.current) {
+      supabaseClient.removeChannel(channelRef.current)
+      channelRef.current = null
+    }
+    const channel = supabase
+      .channel(`room:${roomId}`)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'rooms', filter: `id=eq.${roomId}` }, (payload) => {
+        if (payload.eventType === 'DELETE') {
+          setError('El anfitrión cerró la partida.')
+          setStatus('home')
+          setRoom(null)
+          return
+        }
+        setRoom(payload.new)
+      })
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'room_players', filter: `room_id=eq.${roomId}` },
+        () => {
+          refreshPlayers(roomId)
+        }
+      )
+      .subscribe()
+    channelRef.current = channel
+  }, [])
+
+  async function refreshPlayers(roomId) {
+    const { data } = await supabaseClient.from('room_players').select('*').eq('room_id', roomId).order('joined_at')
+    if (data) setPlayers(data)
+  }
+
+  useEffect(() => {
+    return () => {
+      if (channelRef.current) supabaseClient.removeChannel(channelRef.current)
+    }
+  }, [])
+
+  async function createRoom({ hostName, group }) {
+    setError(null)
+    let code = makeRoomCode()
+    let insertedRoom = null
+    for (let attempt = 0; attempt < 5 && !insertedRoom; attempt++) {
+      const { data, error: insertError } = await supabase
+        .from('rooms')
+        .insert({ code, host_client_id: clientId, group_mode: group, status: 'lobby', state: emptyGameState })
+        .select()
+        .single()
+      if (!insertError) {
+        insertedRoom = data
+      } else if (insertError.code === '23505') {
+        code = makeRoomCode() // colisión de código, reintenta
+      } else {
+        setError('No se pudo crear la sala. Intentá de nuevo.')
+        setStatus('error')
+        return
+      }
+    }
+    if (!insertedRoom) {
+      setError('No se pudo generar un código de sala único. Intentá de nuevo.')
+      setStatus('error')
+      return
+    }
+    const { data: playerRow, error: playerError } = await supabase
+      .from('room_players')
+      .insert({ room_id: insertedRoom.id, client_id: clientId, name: hostName.trim(), is_host: true })
+      .select()
+      .single()
+    if (playerError) {
+      setError('No se pudo unir al anfitrión a la sala.')
+      setStatus('error')
+      return
+    }
+    setRoom(insertedRoom)
+    setPlayers([playerRow])
+    subscribeToRoom(insertedRoom.id)
+    setStatus('lobby')
+  }
+
+  async function joinRoom({ code, name }) {
+    setError(null)
+    const normalized = code.trim().toUpperCase()
+    const { data: foundRoom, error: findError } = await supabase
+      .from('rooms')
+      .select('*')
+      .eq('code', normalized)
+      .maybeSingle()
+    if (findError || !foundRoom) {
+      setError('No encontramos ninguna sala con ese código.')
+      return
+    }
+    if (foundRoom.status === 'finished') {
+      setError('Esa partida ya terminó.')
+      return
+    }
+    // reconexión: si este dispositivo ya estaba en la sala, no crea un jugador duplicado
+    const { data: existing } = await supabase
+      .from('room_players')
+      .select('*')
+      .eq('room_id', foundRoom.id)
+      .eq('client_id', clientId)
+      .maybeSingle()
+
+    if (!existing) {
+      const { error: insertError } = await supabase
+        .from('room_players')
+        .insert({ room_id: foundRoom.id, client_id: clientId, name: name.trim() })
+      if (insertError) {
+        setError('No se pudo unir a la sala. Intentá de nuevo.')
+        return
+      }
+    }
+
+    await refreshPlayers(foundRoom.id)
+    setRoom(foundRoom)
+    subscribeToRoom(foundRoom.id)
+    setStatus(foundRoom.status === 'lobby' ? 'lobby' : 'playing')
+  }
+
+  async function leaveRoom() {
+    if (channelRef.current) {
+      supabaseClient.removeChannel(channelRef.current)
+      channelRef.current = null
+    }
+    if (room && me) {
+      if (isHost) {
+        await supabaseClient.from('rooms').delete().eq('id', room.id)
+      } else {
+        await supabaseClient.from('room_players').delete().eq('id', me.id)
+      }
+    }
+    setRoom(null)
+    setPlayers([])
+    setStatus('home')
+  }
+
+  async function updateState(patch) {
+    if (!room) return
+    const nextState = { ...gameState, ...patch }
+    await supabaseClient.from('rooms').update({ state: nextState }).eq('id', room.id)
+  }
+
+  // --- Acciones del host: controla el flujo general de la partida ---
+  async function startGame() {
+    if (!isHost || !room) return
+    const ids = players.map((p) => p.client_id)
+    await supabase
+      .from('rooms')
+      .update({
+        status: 'playing',
+        state: {
+          ...emptyGameState,
+          totalTurns: Math.min(ONLINE_FIXED_ROUNDS, ids.length),
+          turnQueue: shuffleArray(ids),
+        },
+      })
+      .eq('id', room.id)
+    setStatus('playing')
+  }
+
+  async function spinResult(playerId) {
+    if (!isHost) return
+    let queue = gameState.turnQueue.filter((id) => id !== playerId)
+    if (queue.length === 0) queue = shuffleArray(players.map((p) => p.client_id))
+    await updateState({
+      currentPlayerId: playerId,
+      turnQueue: queue,
+      screen: 'challenge',
+      choice: null,
+      level: null,
+      card: null,
+      fulfilled: null,
+    })
+  }
+
+  // --- Acciones de quien tiene el turno: elige personalmente verdad/reto, nivel y si lo cumplió ---
+  async function chooseType(choice) {
+    if (!isMyTurn) return
+    await updateState({ choice })
+  }
+
+  async function selectLevel(level) {
+    if (!isMyTurn) return
+    const card = pickCard({
+      type: gameState.choice,
+      level,
+      modality: 'distancia',
+      group: room.group_mode,
+      history: gameState.cardHistory,
+      customCards: [],
+    })
+    await updateState({ level, card })
+  }
+
+  async function redrawCard() {
+    if (!isMyTurn || !gameState.level) return
+    const card = pickCard({
+      type: gameState.choice,
+      level: gameState.level,
+      modality: 'distancia',
+      group: room.group_mode,
+      history: gameState.cardHistory,
+      customCards: [],
+    })
+    await updateState({ card })
+  }
+
+  async function setFulfilled(fulfilled) {
+    if (!isMyTurn) return
+    await updateState({ fulfilled })
+  }
+
+  // --- Acción del host: aplica el puntaje del turno actual y avanza ---
+  async function nextTurn() {
+    if (!isHost || !room) return
+    if (gameState.fulfilled) {
+      const current = players.find((p) => p.client_id === gameState.currentPlayerId)
+      if (current) {
+        await supabaseClient.from('room_players').update({ score: current.score + 1 }).eq('id', current.id)
+      }
+    }
+    const cardHistory = gameState.card ? [...gameState.cardHistory, gameState.card.text] : gameState.cardHistory
+    const nextTurnIndex = gameState.turnIndex + 1
+    const done = nextTurnIndex >= gameState.totalTurns
+    await updateState({
+      cardHistory,
+      turnIndex: nextTurnIndex,
+      screen: done ? 'results' : 'roulette',
+      currentPlayerId: null,
+      choice: null,
+      level: null,
+      card: null,
+      fulfilled: null,
+    })
+    if (done) await supabaseClient.from('rooms').update({ status: 'finished' }).eq('id', room.id)
+  }
+
+  async function playAgain() {
+    if (!isHost || !room) return
+    await supabaseClient.from('room_players').update({ score: 0 }).eq('room_id', room.id).neq('score', 0)
+    await startGame()
+  }
+
+  const value = {
+    clientId,
+    status,
+    setStatus,
+    error,
+    setError,
+    room,
+    players,
+    isHost,
+    me,
+    isMyTurn,
+    gameState,
+    createRoom,
+    joinRoom,
+    leaveRoom,
+    startGame,
+    spinResult,
+    chooseType,
+    selectLevel,
+    redrawCard,
+    setFulfilled,
+    nextTurn,
+    playAgain,
+  }
+
+  return <OnlineGameContext.Provider value={value}>{children}</OnlineGameContext.Provider>
+}
+
+function useOnlineGame() {
+  const ctx = useContext(OnlineGameContext)
+  if (!ctx) throw new Error('useOnlineGame debe usarse dentro de OnlineGameProvider')
+  return ctx
+}
+
+// ==== src/screens/HomeScreen.jsx ====
+function HomeScreen({ onGoOnline, onGoAccount, onGoCommunity }) {
+  const { dispatch } = useGame()
+  const { user, profile } = useAuth()
+  const [effectsOn, setEffectsOn] = useState(isEffectsEnabled())
+
+  return (
+    <div className="screen" style={{ justifyContent: 'center', alignItems: 'center', textAlign: 'center', gap: 32 }}>
+      <div className="top-bar" style={{ justifyContent: 'flex-end', gap: 10 }}>
+        <button
+          onClick={() => {
+            const next = !effectsOn
+            setEffectsEnabled(next)
+            setEffectsOn(next)
+          }}
+          aria-label={effectsOn ? 'Silenciar efectos' : 'Activar efectos'}
+          style={{
+            width: 40,
+            height: 40,
+            borderRadius: '50%',
+            background: 'rgba(255,255,255,0.08)',
+            border: '1.5px solid rgba(255,255,255,0.15)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: 16,
+          }}
+        >
+          {effectsOn ? '🔊' : '🔇'}
+        </button>
+        <button
+          onClick={onGoAccount}
+          aria-label="Mi cuenta"
+          style={{
+            width: 40,
+            height: 40,
+            borderRadius: '50%',
+            background: user && profile ? profile.avatar_color : 'rgba(255,255,255,0.08)',
+            border: '1.5px solid rgba(255,255,255,0.15)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: 18,
+          }}
+        >
+          {user && profile ? profile.avatar_emoji : '🙋'}
+        </button>
+      </div>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10, alignItems: 'center' }}>
+        <div
+          className="hero-badge"
+          aria-hidden="true"
+          style={{
+            width: 96,
+            height: 96,
+            borderRadius: 28,
+            background: 'linear-gradient(155deg, var(--accent-pink), var(--accent-pink-dim))',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: 46,
+            boxShadow: '0 16px 36px -8px rgba(255,45,120,0.6)',
+            marginBottom: 4,
+          }}
+        >
+          🎲
+        </div>
+        <h1 className="title" style={{ fontSize: 46, letterSpacing: '-0.01em' }}>
+          Verdad <span style={{ color: 'var(--accent-yellow)' }}>o</span> Reto
+        </h1>
+        <p className="subtitle" style={{ fontSize: 16 }}>Gira, elige y anímate.</p>
+      </div>
+
+      <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 12 }}>
+        <button className="btn btn-primary btn-block" onClick={() => dispatch({ type: 'GO_SETUP' })}>
+          Partida rápida
+        </button>
+        <button className="btn btn-secondary btn-block" onClick={onGoOnline}>
+          Partida online
+        </button>
+        <button className="btn btn-secondary btn-block" onClick={onGoCommunity}>
+          Contenido de la comunidad
+        </button>
+      </div>
+    </div>
+  )
+}
+
+// ==== src/screens/SetupScreen.jsx ====
+function SetupScreen() {
+  const { state, dispatch } = useGame()
+
+  return (
+    <div className="screen">
+      <div className="top-bar">
+        <button className="back-btn" onClick={() => dispatch({ type: 'GO_HOME' })}>
+          ‹ Volver
+        </button>
+      </div>
+
+      <div>
+        <p className="eyebrow">Paso 1 de 2</p>
+        <h2 className="title" style={{ fontSize: 26 }}>
+          ¿Cómo van a jugar?
+        </h2>
+      </div>
+
+      <div>
+        <p className="subtitle" style={{ marginBottom: 10 }}>Modo</p>
+        <div className="option-grid">
+          <button
+            className={`option-card ${state.group === 'pareja' ? 'selected' : ''}`}
+            onClick={() => dispatch({ type: 'SET_GROUP', group: 'pareja' })}
+          >
+            <span className="icon">💑</span>
+            <span className="label">Pareja</span>
+            <span className="desc">Solo ustedes dos</span>
+          </button>
+          <button
+            className={`option-card ${state.group === 'grupo' ? 'selected' : ''}`}
+            onClick={() => dispatch({ type: 'SET_GROUP', group: 'grupo' })}
+          >
+            <span className="icon">🎉</span>
+            <span className="label">Grupo</span>
+            <span className="desc">3 o más jugadores</span>
+          </button>
+        </div>
+      </div>
+
+      <div>
+        <p className="subtitle" style={{ marginBottom: 10 }}>
+          Modalidad {!state.group && <span style={{ color: 'var(--accent-yellow)' }}>· elegí el modo primero ↑</span>}
+        </p>
+        <div className="option-grid">
+          <button
+            className={`option-card ${state.modality === 'presencial' ? 'selected' : ''}`}
+            disabled={!state.group}
+            onClick={() => dispatch({ type: 'SET_MODALITY', modality: 'presencial' })}
+          >
+            <span className="icon">🏠</span>
+            <span className="label">Presencial</span>
+            <span className="desc">Mismo dispositivo, en persona</span>
+          </button>
+          <button
+            className={`option-card ${state.modality === 'distancia' ? 'selected' : ''}`}
+            disabled={!state.group}
+            onClick={() => dispatch({ type: 'SET_MODALITY', modality: 'distancia' })}
+          >
+            <span className="icon">📱</span>
+            <span className="label">A distancia</span>
+            <span className="desc">Cada quien con su cel</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ==== src/screens/PlayersScreen.jsx ====
+const MIN_PLAYERS = { pareja: 2, grupo: 3 }
+
+function PlayersScreen() {
+  const { state, dispatch } = useGame()
+  const [name, setName] = useState('')
+  const [loadingCommunity, setLoadingCommunity] = useState(false)
+  const min = MIN_PLAYERS[state.group] ?? 2
+  const max = state.group === 'pareja' ? 2 : 12
+
+  function addPlayer() {
+    if (state.players.length >= max) return
+    dispatch({ type: 'ADD_PLAYER', name })
+    setName('')
+  }
+
+  async function toggleCommunity() {
+    const enabling = !state.communityEnabled
+    dispatch({ type: 'SET_COMMUNITY_ENABLED', enabled: enabling })
+    if (!enabling) return
+    setLoadingCommunity(true)
+    const { data } = await fetchApprovedCards({ group: state.group, modality: state.modality })
+    const mapped = data.map((c) => ({
+      communityId: c.id,
+      type: c.type,
+      level: c.level,
+      modality: c.modality,
+      group: c.group_mode,
+      text: c.text,
+      timerSeconds: c.timer_seconds ?? undefined,
+    }))
+    dispatch({ type: 'SET_COMMUNITY_CARDS', cards: mapped })
+    setLoadingCommunity(false)
+  }
+
+  return (
+    <div className="screen">
+      <div className="top-bar">
+        <button className="back-btn" onClick={() => dispatch({ type: 'GO_SETUP' })}>
+          ‹ Volver
+        </button>
+      </div>
+
+      <div>
+        <p className="eyebrow">Paso 2 de 2</p>
+        <h2 className="title" style={{ fontSize: 26 }}>
+          ¿Quiénes juegan?
+        </h2>
+        <p className="subtitle" style={{ marginTop: 6 }}>
+          {state.group === 'pareja' ? 'Necesitas 2 jugadores.' : `Mínimo ${min} jugadores.`}
+        </p>
+      </div>
+
+      <form
+        style={{ display: 'flex', gap: 10 }}
+        onSubmit={(e) => {
+          e.preventDefault()
+          addPlayer()
+        }}
+      >
+        <input
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Nombre del jugador"
+          maxLength={18}
+          disabled={state.players.length >= max}
+          style={{
+            flex: 1,
+            background: 'var(--surface-card)',
+            border: '1.5px solid rgba(255,255,255,0.1)',
+            borderRadius: 14,
+            padding: '14px 16px',
+            color: 'var(--text-primary)',
+            fontSize: 15,
+            fontFamily: 'var(--font-body)',
+          }}
+        />
+        <button type="submit" className="btn btn-yellow" disabled={!name.trim() || state.players.length >= max}>
+          Agregar
+        </button>
+      </form>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8, flex: 1 }}>
+        {state.players.map((p, i) => (
+          <div
+            key={p.id}
+            className="card"
+            style={{ padding: '12px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
+          >
+            <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700 }}>
+              {PLAYER_EMOJIS[i % PLAYER_EMOJIS.length]} {p.name}
+            </span>
+            <button
+              onClick={() => dispatch({ type: 'REMOVE_PLAYER', id: p.id })}
+              aria-label={`Quitar a ${p.name}`}
+              style={{ background: 'none', border: 'none', color: 'var(--text-muted)', fontSize: 18, padding: 12, minWidth: 44, minHeight: 44 }}
+            >
+              ✕
+            </button>
+          </div>
+        ))}
+        {state.players.length === 0 && (
+          <p className="subtitle" style={{ textAlign: 'center', marginTop: 20 }}>
+            Todavía no agregaste jugadores.
+          </p>
+        )}
+      </div>
+
+      <button
+        className="btn btn-secondary btn-block"
+        style={{ fontSize: 14, padding: '12px 16px' }}
+        onClick={() => dispatch({ type: 'GO_CUSTOM' })}
+      >
+        + Agregar preguntas o retos propios{state.customCards.length > 0 ? ` (${state.customCards.length})` : ''}
+      </button>
+
+      <button
+        className="btn btn-secondary btn-block"
+        style={{ fontSize: 14, padding: '12px 16px' }}
+        onClick={toggleCommunity}
+        disabled={loadingCommunity}
+      >
+        {loadingCommunity
+          ? 'Cargando contenido de la comunidad…'
+          : state.communityEnabled
+            ? `✓ Contenido de la comunidad activado (${state.communityCards.length})`
+            : 'Sumar contenido de la comunidad'}
+      </button>
+
+      <button
+        className="btn btn-primary btn-block"
+        disabled={state.players.length < min}
+        onClick={() => dispatch({ type: 'START_GAME' })}
+      >
+        Empezar a jugar
+      </button>
+    </div>
+  )
+}
+
+const PLAYER_EMOJIS = ['🦊', '🐼', '🦁', '🐸', '🐨', '🐯', '🐵', '🐰', '🐺', '🐱', '🐶', '🦄']
+
+// ==== src/screens/CustomContentScreen.jsx ====
+function CustomContentScreen() {
+  const { state, dispatch } = useGame()
+  const [cardType, setCardType] = useState('truth')
+  const [level, setLevel] = useState(1)
+  const [text, setText] = useState('')
+  const [timerSeconds, setTimerSeconds] = useState(30)
+
+  function submit(e) {
+    e.preventDefault()
+    if (!text.trim()) return
+    dispatch({ type: 'ADD_CUSTOM_CARD', cardType, level, text, timerSeconds })
+    setText('')
+  }
+
+  return (
+    <div className="screen">
+      <div className="top-bar">
+        <button className="back-btn" onClick={() => dispatch({ type: 'BACK_TO_PLAYERS' })}>
+          ‹ Volver
+        </button>
+      </div>
+
+      <div>
+        <p className="eyebrow">Contenido propio</p>
+        <h2 className="title" style={{ fontSize: 24 }}>
+          Agregá tus preguntas y retos
+        </h2>
+        <p className="subtitle" style={{ marginTop: 6 }}>
+          Se van a mezclar con las del banco solo en esta partida.
+        </p>
+      </div>
+
+      <form onSubmit={submit} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+        <div className="option-grid">
+          <button
+            type="button"
+            className={`option-card ${cardType === 'truth' ? 'selected' : ''}`}
+            onClick={() => setCardType('truth')}
+          >
+            <span className="icon">🗣️</span>
+            <span className="label">Verdad</span>
+          </button>
+          <button
+            type="button"
+            className={`option-card ${cardType === 'dare' ? 'selected' : ''}`}
+            onClick={() => setCardType('dare')}
+          >
+            <span className="icon">🔥</span>
+            <span className="label">Reto</span>
+          </button>
+        </div>
+
+        <div>
+          <p className="subtitle" style={{ marginBottom: 8 }}>
+            Nivel de intensidad
+          </p>
+          <div style={{ display: 'flex', gap: 8 }}>
+            {LEVELS.map((lvl) => (
+              <button
+                key={lvl.id}
+                type="button"
+                onClick={() => setLevel(lvl.id)}
+                className="btn"
+                style={{
+                  flex: 1,
+                  padding: '10px 6px',
+                  fontSize: 14,
+                  background: level === lvl.id ? 'var(--accent-pink)' : 'rgba(255,255,255,0.06)',
+                  color: level === lvl.id ? '#fff' : 'var(--text-muted)',
+                }}
+              >
+                {lvl.id}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <textarea
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          placeholder={cardType === 'truth' ? 'Escribí la pregunta…' : 'Escribí el reto…'}
+          rows={3}
+          maxLength={220}
+          style={{
+            width: '100%',
+            background: 'var(--surface-card)',
+            border: '1.5px solid rgba(255,255,255,0.1)',
+            borderRadius: 14,
+            padding: '14px 16px',
+            color: 'var(--text-primary)',
+            fontSize: 15,
+            fontFamily: 'var(--font-body)',
+            resize: 'vertical',
+          }}
+        />
+
+        {cardType === 'dare' && (
+          <div>
+            <p className="subtitle" style={{ marginBottom: 8 }}>
+              Tiempo para cumplirlo: {timerSeconds}s
+            </p>
+            <input
+              type="range"
+              min={10}
+              max={120}
+              step={5}
+              value={timerSeconds}
+              onChange={(e) => setTimerSeconds(Number(e.target.value))}
+              style={{ width: '100%' }}
+            />
+          </div>
+        )}
+
+        <button type="submit" className="btn btn-yellow btn-block" disabled={!text.trim()}>
+          Agregar a la partida
+        </button>
+      </form>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8, flex: 1, overflowY: 'auto' }}>
+        {state.customCards.length === 0 && (
+          <p className="subtitle" style={{ textAlign: 'center', marginTop: 12 }}>
+            Todavía no agregaste contenido propio.
+          </p>
+        )}
+        {state.customCards.map((c) => (
+          <div
+            key={c.id}
+            className="card"
+            style={{ padding: '12px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10 }}
+          >
+            <span style={{ fontSize: 13.5 }}>
+              <strong>{c.type === 'truth' ? 'Verdad' : 'Reto'} · N{c.level}</strong>
+              <br />
+              {c.text}
+            </span>
+            <button
+              onClick={() => dispatch({ type: 'REMOVE_CUSTOM_CARD', id: c.id })}
+              aria-label="Quitar"
+              style={{ background: 'none', border: 'none', color: 'var(--text-muted)', fontSize: 18, padding: 12, minWidth: 44, minHeight: 44, flexShrink: 0 }}
+            >
+              ✕
+            </button>
+          </div>
+        ))}
+      </div>
+
+      <button className="btn btn-secondary btn-block" onClick={() => dispatch({ type: 'BACK_TO_PLAYERS' })}>
+        Listo
+      </button>
+    </div>
+  )
+}
+
+// ==== src/screens/RouletteScreen.jsx ====
+const SEGMENT_COLORS = ['#ff2d78', '#331d61', '#ffd23f', '#5a2f9e']
+
+function polarToCartesian(cx, cy, r, angleDeg) {
+  const angleRad = ((angleDeg - 90) * Math.PI) / 180
+  return { x: cx + r * Math.cos(angleRad), y: cy + r * Math.sin(angleRad) }
+}
+
+function segmentPath(cx, cy, r, startAngle, endAngle) {
+  const start = polarToCartesian(cx, cy, r, endAngle)
+  const end = polarToCartesian(cx, cy, r, startAngle)
+  const largeArc = endAngle - startAngle > 180 ? 1 : 0
+  return `M ${cx} ${cy} L ${start.x} ${start.y} A ${r} ${r} 0 ${largeArc} 0 ${end.x} ${end.y} Z`
+}
+
+function RouletteScreen() {
+  const { state, dispatch } = useGame()
+  const players = state.players
+  const n = players.length
+  const segAngle = 360 / n
+  const [rotation, setRotation] = useState(0)
+  const [spinning, setSpinning] = useState(false)
+  const [justLanded, setJustLanded] = useState(false)
+  const chosenRef = useRef(null)
+
+  const segments = useMemo(
+    () =>
+      players.map((p, i) => ({
+        player: p,
+        start: i * segAngle,
+        end: (i + 1) * segAngle,
+        color: SEGMENT_COLORS[i % SEGMENT_COLORS.length],
+      })),
+    [players, segAngle]
+  )
+
+  function spin() {
+    if (spinning) return
+    setSpinning(true)
+    setJustLanded(false)
+    // el ganador sale de la cola de turnos pendientes, no de todos los jugadores,
+    // así se garantiza que todos jueguen antes de que alguien repita
+    const pool = state.turnQueue.length > 0 ? state.turnQueue : players.map((p) => p.id)
+    const winnerId = pool[Math.floor(Math.random() * pool.length)]
+    const winnerIndex = players.findIndex((p) => p.id === winnerId)
+    chosenRef.current = players[winnerIndex].id
+    // el puntero está fijo arriba (0deg); centramos el segmento ganador ahí
+    const winnerCenter = winnerIndex * segAngle + segAngle / 2
+    const extraSpins = 5 * 360
+    const target = extraSpins + (360 - winnerCenter)
+    setRotation((prev) => prev - (prev % 360) + target)
+
+    // tics que simulan la desaceleración de la ruleta física
+    let delay = 40
+    let elapsed = 0
+    const scheduleTick = () => {
+      if (elapsed >= 3100) return
+      setTimeout(() => {
+        playTick()
+        elapsed += delay
+        delay = Math.min(delay * 1.18, 220)
+        scheduleTick()
+      }, delay)
+    }
+    scheduleTick()
+  }
+
+  function handleTransitionEnd() {
+    if (!spinning) return
+    setSpinning(false)
+    setJustLanded(true)
+    playLand()
+    vibrate([30, 40, 30])
+    setTimeout(() => {
+      dispatch({ type: 'SPIN_RESULT', playerId: chosenRef.current })
+    }, 550)
+  }
+
+  const cx = 150
+  const cy = 150
+  const r = 145
+
+  return (
+    <div className="screen" style={{ alignItems: 'center', textAlign: 'center', justifyContent: 'center', gap: 28 }}>
+      <div>
+        <span className="progress-pill">
+          Turno {state.turnIndex + 1} de {state.totalTurns}
+        </span>
+      </div>
+
+      <h2 className="title" style={{ fontSize: 24 }}>
+        {spinning ? 'Girando…' : '¿A quién le toca?'}
+      </h2>
+
+      {justLanded && <Confetti count={50} />}
+
+      <div className="roulette-wrap" style={{ position: 'relative', width: 'min(280px, 78vw)', height: 'min(280px, 78vw)' }}>
+        <div className="roulette-glow-ring" aria-hidden="true" />
+        <div
+          aria-hidden="true"
+          style={{
+            position: 'absolute',
+            top: -6,
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: 0,
+            height: 0,
+            borderLeft: '12px solid transparent',
+            borderRight: '12px solid transparent',
+            borderTop: '20px solid var(--accent-yellow)',
+            zIndex: 2,
+            filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.4))',
+          }}
+        />
+        <svg
+          viewBox="0 0 300 300"
+          width="100%"
+          height="100%"
+          style={{
+            display: 'block',
+            transform: `rotate(${rotation}deg)`,
+            transition: spinning ? 'transform 3.2s cubic-bezier(0.15, 0.6, 0.15, 1)' : 'none',
+          }}
+          onTransitionEnd={handleTransitionEnd}
+        >
+          <circle cx={cx} cy={cy} r={r} fill="var(--surface-card)" stroke="rgba(255,255,255,0.1)" strokeWidth="2" />
+          {segments.map((seg) => {
+            const mid = (seg.start + seg.end) / 2
+            const labelPos = polarToCartesian(cx, cy, r * 0.62, mid)
+            return (
+              <g key={seg.player.id}>
+                <path d={segmentPath(cx, cy, r, seg.start, seg.end)} fill={seg.color} stroke="var(--bg-void)" strokeWidth="2" />
+                <text
+                  x={labelPos.x}
+                  y={labelPos.y}
+                  fill="#fff"
+                  fontSize="13"
+                  fontWeight="700"
+                  fontFamily="Baloo 2, sans-serif"
+                  textAnchor="middle"
+                  dominantBaseline="middle"
+                  transform={`rotate(${mid}, ${labelPos.x}, ${labelPos.y})`}
+                >
+                  {seg.player.name.length > 10 ? seg.player.name.slice(0, 9) + '…' : seg.player.name}
+                </text>
+              </g>
+            )
+          })}
+          <circle cx={cx} cy={cy} r={26} fill="var(--accent-pink)" stroke="var(--bg-void)" strokeWidth="3" />
+        </svg>
+      </div>
+
+      <button className="btn btn-primary btn-block" onClick={spin} disabled={spinning}>
+        {spinning ? 'Girando…' : 'Girar la ruleta'}
+      </button>
+    </div>
+  )
+}
+
+// ==== src/screens/ChallengeScreen.jsx ====
+function ChallengeScreen() {
+  const { state, dispatch } = useGame()
+  const player = state.players.find((p) => p.id === state.currentPlayerId)
+  const [timeLeft, setTimeLeft] = useState(null)
+  const [timerRunning, setTimerRunning] = useState(false)
+
+  useEffect(() => {
+    setTimeLeft(null)
+    setTimerRunning(false)
+    if (state.card) {
+      playReveal()
+      vibrate(15)
+    }
+  }, [state.card])
+
+  useEffect(() => {
+    if (!timerRunning || timeLeft === null) return
+    if (timeLeft <= 0) {
+      setTimerRunning(false)
+      playBuzzer()
+      vibrate([100, 50, 100])
+      return
+    }
+    const urgent = timeLeft <= 5
+    playCountdownTick(urgent)
+    if (urgent) vibrate(15)
+    const id = setTimeout(() => setTimeLeft((t) => t - 1), 1000)
+    return () => clearTimeout(id)
+  }, [timerRunning, timeLeft])
+
+  if (!player) return null
+
+  return (
+    <div className="screen">
+      <div className="top-bar">
+        <span className="progress-pill">
+          Turno {state.turnIndex + 1} de {state.totalTurns}
+        </span>
+        <span className="progress-pill">
+          {player.name} · {player.score} pts
+        </span>
+      </div>
+
+      <div style={{ textAlign: 'center' }}>
+        <p className="eyebrow">Le toca a</p>
+        <h2 className="title" style={{ fontSize: 30 }}>
+          {player.name}
+        </h2>
+      </div>
+
+      {!state.choice && (
+        <div className="option-grid" style={{ marginTop: 8 }}>
+          <button className="option-card" onClick={() => dispatch({ type: 'CHOOSE_TYPE', choice: 'truth' })}>
+            <span className="icon">🗣️</span>
+            <span className="label">Verdad</span>
+            <span className="desc">Responde sin filtro</span>
+          </button>
+          <button className="option-card" onClick={() => dispatch({ type: 'CHOOSE_TYPE', choice: 'dare' })}>
+            <span className="icon">🔥</span>
+            <span className="label">Reto</span>
+            <span className="desc">Anímate a cumplirlo</span>
+          </button>
+        </div>
+      )}
+
+      {state.choice && !state.card && (
+        <div>
+          <p className="subtitle" style={{ marginBottom: 10, textAlign: 'center' }}>
+            Elegí el nivel de intensidad
+          </p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {LEVELS.map((lvl) => (
+              <button
+                key={lvl.id}
+                className="option-card"
+                style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}
+                onClick={() => dispatch({ type: 'SELECT_LEVEL', level: lvl.id })}
+              >
+                <span style={{ flex: 1 }}>
+                  <span className="label">
+                    {lvl.id}. {lvl.name}
+                  </span>
+                  <br />
+                  <span className="desc">{lvl.tagline}</span>
+                  <span className="intensity-bar" aria-hidden="true">
+                    {[1, 2, 3, 4].map((n) => (
+                      <span key={n} className={n <= lvl.id ? 'filled' : ''} />
+                    ))}
+                  </span>
+                </span>
+                <span aria-hidden="true" style={{ fontSize: 18, marginLeft: 10 }}>
+                  {'🌶️'.repeat(lvl.id)}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {state.card && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, flex: 1 }}>
+          <div
+            key={state.card.text}
+            className="card card-reveal"
+            style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 14, minHeight: 180 }}
+          >
+            <span className="eyebrow">{state.choice === 'truth' ? 'Verdad' : 'Reto'} · Nivel {state.level}</span>
+            <p style={{ fontSize: 20, fontWeight: 600, lineHeight: 1.4 }}>{state.card.text}</p>
+          </div>
+
+          {state.choice === 'dare' && state.card.timerSeconds && (
+            <div className="card" style={{ textAlign: 'center' }}>
+              <p
+                className={timerRunning && timeLeft !== null && timeLeft <= 5 ? 'timer-urgent' : ''}
+                style={{ fontFamily: 'var(--font-display)', fontSize: 32, fontWeight: 800 }}
+              >
+                {timeLeft === null ? state.card.timerSeconds : timeLeft}s
+              </p>
+              {!timerRunning && (timeLeft === null || timeLeft > 0) && (
+                <button
+                  className="btn btn-yellow"
+                  style={{ marginTop: 8 }}
+                  onClick={() => {
+                    setTimeLeft(state.card.timerSeconds)
+                    setTimerRunning(true)
+                  }}
+                >
+                  Iniciar tiempo
+                </button>
+              )}
+            </div>
+          )}
+
+          <div style={{ display: 'flex', gap: 10 }}>
+            <button className="btn btn-secondary" style={{ flex: 1 }} onClick={() => dispatch({ type: 'REDRAW_CARD' })}>
+              Cambiar carta
+            </button>
+          </div>
+
+          <div style={{ display: 'flex', gap: 10 }}>
+            <button
+              className="btn btn-secondary btn-block"
+              onClick={() => {
+                playFail()
+                vibrate(80)
+                dispatch({ type: 'MARK_RESULT', fulfilled: false })
+              }}
+            >
+              No lo cumplió
+            </button>
+            <button
+              className="btn btn-primary btn-block"
+              onClick={() => {
+                playSuccess()
+                vibrate([20, 30, 20, 30, 60])
+                dispatch({ type: 'MARK_RESULT', fulfilled: true })
+              }}
+            >
+              ¡Lo cumplió! +1
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ==== src/screens/ResultsScreen.jsx ====
+function ResultsScreen() {
+  const { state, dispatch } = useGame()
+  const { recordGameResult } = useAuth()
+  const recorded = useRef(false)
+  const ranked = [...state.players].sort((a, b) => b.score - a.score)
+  const winner = ranked[0]
+  const isTie = ranked.length > 1 && ranked[0].score === ranked[1].score
+  const totalPoints = state.players.reduce((sum, p) => sum + p.score, 0)
+
+  useEffect(() => {
+    if (recorded.current) return
+    recorded.current = true
+    playVictory()
+    vibrate([50, 50, 50, 50, 150])
+    recordGameResult({
+      truths: state.statsThisGame.truths,
+      daresCompleted: state.statsThisGame.daresCompleted,
+      daresFailed: state.statsThisGame.daresFailed,
+      points: totalPoints,
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  return (
+    <div className="screen" style={{ alignItems: 'center', textAlign: 'center' }}>
+      <Confetti count={60} />
+      <p className="eyebrow" style={{ marginTop: 12 }}>
+        Partida terminada
+      </p>
+      <h2 className="title" style={{ fontSize: 30 }}>
+        {isTie ? '¡Empate en la cima! 🎉' : (
+          <>
+            <span className="trophy-glow">🏆</span> {winner?.name} arrasó
+          </>
+        )}
+      </h2>
+
+      <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 10, marginTop: 8 }}>
+        {ranked.map((p, i) => (
+          <div
+            key={p.id}
+            className="card"
+            style={{
+              padding: '14px 18px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              border: i === 0 ? '2px solid var(--accent-yellow)' : undefined,
+            }}
+          >
+            <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 16 }}>
+              {i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i + 1}.`} {p.name}
+            </span>
+            <span style={{ fontWeight: 700, color: 'var(--accent-yellow)' }}>{p.score} pts</span>
+          </div>
+        ))}
+      </div>
+
+      <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 12, marginTop: 'auto' }}>
+        <button className="btn btn-primary btn-block" onClick={() => dispatch({ type: 'PLAY_AGAIN' })}>
+          Jugar de nuevo
+        </button>
+        <button className="btn btn-secondary btn-block" onClick={() => dispatch({ type: 'GO_HOME' })}>
+          Volver al inicio
+        </button>
+      </div>
+    </div>
+  )
+}
+
+// ==== src/screens/online/OnlineHomeScreen.jsx ====
+function OnlineHomeScreen({ onExit }) {
+  const { setStatus, error, setError } = useOnlineGame()
+
+  return (
+    <div className="screen" style={{ justifyContent: 'center', gap: 24 }}>
+      <div className="top-bar">
+        <button
+          className="back-btn"
+          onClick={() => {
+            setError(null)
+            onExit()
+          }}
+        >
+          ‹ Volver
+        </button>
+      </div>
+
+      <div style={{ textAlign: 'center' }}>
+        <p className="eyebrow">Partida online</p>
+        <h2 className="title" style={{ fontSize: 26 }}>
+          Cada quien desde su cel
+        </h2>
+        <p className="subtitle" style={{ marginTop: 6 }}>Necesitan conexión a internet</p>
+      </div>
+
+      {error && (
+        <p className="subtitle" style={{ color: 'var(--accent-pink)', textAlign: 'center' }}>
+          {error}
+        </p>
+      )}
+
+      <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 12 }}>
+        <button
+          className="btn btn-primary btn-block"
+          onClick={() => {
+            setError(null)
+            setStatus('create')
+          }}
+        >
+          Crear partida
+        </button>
+        <button
+          className="btn btn-secondary btn-block"
+          onClick={() => {
+            setError(null)
+            setStatus('join')
+          }}
+        >
+          Unirse a partida
+        </button>
+      </div>
+    </div>
+  )
+}
+
+// ==== src/screens/online/CreateRoomScreen.jsx ====
+function CreateRoomScreen() {
+  const { createRoom, setStatus, error } = useOnlineGame()
+  const [name, setName] = useState('')
+  const [group, setGroup] = useState(null)
+  const [submitting, setSubmitting] = useState(false)
+
+  async function handleCreate() {
+    if (!name.trim() || !group || submitting) return
+    setSubmitting(true)
+    await createRoom({ hostName: name, group })
+    setSubmitting(false)
+  }
+
+  return (
+    <div className="screen">
+      <div className="top-bar">
+        <button className="back-btn" onClick={() => setStatus('home')}>
+          ‹ Volver
+        </button>
+      </div>
+
+      <div>
+        <p className="eyebrow">Crear partida</p>
+        <h2 className="title" style={{ fontSize: 26 }}>
+          Vas a ser el anfitrión
+        </h2>
+      </div>
+
+      <div>
+        <p className="subtitle" style={{ marginBottom: 10 }}>Tu nombre</p>
+        <input
+          className="text-input"
+          value={name}
+          maxLength={20}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="¿Cómo te decimos?"
+        />
+      </div>
+
+      <div>
+        <p className="subtitle" style={{ marginBottom: 10 }}>Modo</p>
+        <div className="option-grid">
+          <button className={`option-card ${group === 'pareja' ? 'selected' : ''}`} onClick={() => setGroup('pareja')}>
+            <span className="icon">💑</span>
+            <span className="label">Pareja</span>
+            <span className="desc">Solo ustedes dos</span>
+          </button>
+          <button className={`option-card ${group === 'grupo' ? 'selected' : ''}`} onClick={() => setGroup('grupo')}>
+            <span className="icon">🎉</span>
+            <span className="label">Grupo</span>
+            <span className="desc">3 o más jugadores</span>
+          </button>
+        </div>
+      </div>
+
+      {error && (
+        <p className="subtitle" style={{ color: 'var(--accent-pink)', textAlign: 'center' }}>
+          {error}
+        </p>
+      )}
+
+      <button className="btn btn-primary btn-block" disabled={!name.trim() || !group || submitting} onClick={handleCreate}>
+        {submitting ? 'Creando…' : 'Crear sala'}
+      </button>
+    </div>
+  )
+}
+
+// ==== src/screens/online/JoinRoomScreen.jsx ====
+function JoinRoomScreen() {
+  const { joinRoom, setStatus, error } = useOnlineGame()
+  const [name, setName] = useState('')
+  const [code, setCode] = useState('')
+  const [submitting, setSubmitting] = useState(false)
+
+  async function handleJoin() {
+    if (!name.trim() || !code.trim() || submitting) return
+    setSubmitting(true)
+    await joinRoom({ code, name })
+    setSubmitting(false)
+  }
+
+  return (
+    <div className="screen">
+      <div className="top-bar">
+        <button className="back-btn" onClick={() => setStatus('home')}>
+          ‹ Volver
+        </button>
+      </div>
+
+      <div>
+        <p className="eyebrow">Unirse a partida</p>
+        <h2 className="title" style={{ fontSize: 26 }}>
+          Ingresá el código de la sala
+        </h2>
+      </div>
+
+      <div>
+        <p className="subtitle" style={{ marginBottom: 10 }}>Código de sala</p>
+        <input
+          className="text-input"
+          value={code}
+          maxLength={5}
+          onChange={(e) => setCode(e.target.value.toUpperCase())}
+          placeholder="EJ: 7K2QP"
+          style={{ textTransform: 'uppercase', letterSpacing: '0.15em', textAlign: 'center', fontWeight: 700 }}
+        />
+      </div>
+
+      <div>
+        <p className="subtitle" style={{ marginBottom: 10 }}>Tu nombre</p>
+        <input
+          className="text-input"
+          value={name}
+          maxLength={20}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="¿Cómo te decimos?"
+        />
+      </div>
+
+      {error && (
+        <p className="subtitle" style={{ color: 'var(--accent-pink)', textAlign: 'center' }}>
+          {error}
+        </p>
+      )}
+
+      <button className="btn btn-primary btn-block" disabled={!name.trim() || !code.trim() || submitting} onClick={handleJoin}>
+        {submitting ? 'Uniéndote…' : 'Unirme'}
+      </button>
+    </div>
+  )
+}
+
+// ==== src/screens/online/LobbyScreen.jsx ====
+function LobbyScreen() {
+  const { room, players, isHost, startGame, leaveRoom } = useOnlineGame()
+
+  return (
+    <div className="screen">
+      <div className="top-bar">
+        <button className="back-btn" onClick={leaveRoom}>
+          ‹ Salir
+        </button>
+      </div>
+
+      <div style={{ textAlign: 'center' }}>
+        <p className="eyebrow">Código de la sala</p>
+        <h2 className="title" style={{ fontSize: 40, letterSpacing: '0.1em' }}>
+          {room.code}
+        </h2>
+        <p className="subtitle" style={{ marginTop: 6 }}>Compartí este código para que se unan</p>
+      </div>
+
+      <div>
+        <p className="subtitle" style={{ marginBottom: 10 }}>
+          Jugadores ({players.length})
+        </p>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          {players.map((p) => (
+            <div
+              key={p.id}
+              className="card"
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px' }}
+            >
+              <span className="label">{p.name}</span>
+              {p.is_host && <span className="progress-pill">Anfitrión</span>}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {isHost ? (
+        <button className="btn btn-primary btn-block" disabled={players.length < 2} onClick={startGame}>
+          {players.length < 2 ? 'Esperando más jugadores…' : 'Iniciar partida'}
+        </button>
+      ) : (
+        <p className="subtitle" style={{ textAlign: 'center' }}>
+          Esperando a que el anfitrión inicie la partida…
+        </p>
+      )}
+    </div>
+  )
+}
+
+// ==== src/screens/online/OnlineRouletteScreen.jsx ====
+function OnlineRouletteScreen() {
+  const { players, gameState, isHost, spinResult } = useOnlineGame()
+  const n = players.length
+  const segAngle = 360 / n
+  const [rotation, setRotation] = useState(0)
+  const [spinning, setSpinning] = useState(false)
+  const [justLanded, setJustLanded] = useState(false)
+  const chosenRef = useRef(null)
+
+  const segments = useMemo(
+    () =>
+      players.map((p, i) => ({
+        player: p,
+        start: i * segAngle,
+        end: (i + 1) * segAngle,
+        color: SEGMENT_COLORS[i % SEGMENT_COLORS.length],
+      })),
+    [players, segAngle]
+  )
+
+  function spin() {
+    if (spinning || !isHost) return
+    setSpinning(true)
+    setJustLanded(false)
+    const pool = gameState.turnQueue.length > 0 ? gameState.turnQueue : players.map((p) => p.client_id)
+    const winnerId = pool[Math.floor(Math.random() * pool.length)]
+    const winnerIndex = players.findIndex((p) => p.client_id === winnerId)
+    chosenRef.current = players[winnerIndex].client_id
+    const winnerCenter = winnerIndex * segAngle + segAngle / 2
+    const extraSpins = 5 * 360
+    const target = extraSpins + (360 - winnerCenter)
+    setRotation((prev) => prev - (prev % 360) + target)
+
+    let delay = 40
+    let elapsed = 0
+    const scheduleTick = () => {
+      if (elapsed >= 3100) return
+      setTimeout(() => {
+        playTick()
+        elapsed += delay
+        delay = Math.min(delay * 1.18, 220)
+        scheduleTick()
+      }, delay)
+    }
+    scheduleTick()
+  }
+
+  function handleTransitionEnd() {
+    if (!spinning) return
+    setSpinning(false)
+    setJustLanded(true)
+    playLand()
+    vibrate([30, 40, 30])
+    setTimeout(() => {
+      spinResult(chosenRef.current)
+    }, 550)
+  }
+
+  const cx = 150
+  const cy = 150
+  const r = 145
+
+  return (
+    <div className="screen" style={{ alignItems: 'center', textAlign: 'center', justifyContent: 'center', gap: 28 }}>
+      <div>
+        <span className="progress-pill">
+          Turno {gameState.turnIndex + 1} de {gameState.totalTurns}
+        </span>
+      </div>
+
+      <h2 className="title" style={{ fontSize: 24 }}>
+        {spinning ? 'Girando…' : '¿A quién le toca?'}
+      </h2>
+
+      {justLanded && <Confetti count={50} />}
+
+      <div className="roulette-wrap" style={{ position: 'relative', width: 'min(280px, 78vw)', height: 'min(280px, 78vw)' }}>
+        <div className="roulette-glow-ring" aria-hidden="true" />
+        <div
+          aria-hidden="true"
+          style={{
+            position: 'absolute',
+            top: -6,
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: 0,
+            height: 0,
+            borderLeft: '12px solid transparent',
+            borderRight: '12px solid transparent',
+            borderTop: '20px solid var(--accent-yellow)',
+            zIndex: 2,
+            filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.4))',
+          }}
+        />
+        <svg
+          viewBox="0 0 300 300"
+          width="100%"
+          height="100%"
+          style={{
+            display: 'block',
+            transform: `rotate(${rotation}deg)`,
+            transition: spinning ? 'transform 3.2s cubic-bezier(0.15, 0.6, 0.15, 1)' : 'none',
+          }}
+          onTransitionEnd={handleTransitionEnd}
+        >
+          <circle cx={cx} cy={cy} r={r} fill="var(--surface-card)" stroke="rgba(255,255,255,0.1)" strokeWidth="2" />
+          {segments.map((seg) => {
+            const mid = (seg.start + seg.end) / 2
+            const labelPos = polarToCartesian(cx, cy, r * 0.62, mid)
+            return (
+              <g key={seg.player.id}>
+                <path d={segmentPath(cx, cy, r, seg.start, seg.end)} fill={seg.color} stroke="var(--bg-void)" strokeWidth="2" />
+                <text
+                  x={labelPos.x}
+                  y={labelPos.y}
+                  fill="#fff"
+                  fontSize="13"
+                  fontWeight="700"
+                  fontFamily="Baloo 2, sans-serif"
+                  textAnchor="middle"
+                  dominantBaseline="middle"
+                  transform={`rotate(${mid}, ${labelPos.x}, ${labelPos.y})`}
+                >
+                  {seg.player.name.length > 10 ? seg.player.name.slice(0, 9) + '…' : seg.player.name}
+                </text>
+              </g>
+            )
+          })}
+          <circle cx={cx} cy={cy} r={26} fill="var(--accent-pink)" stroke="var(--bg-void)" strokeWidth="3" />
+        </svg>
+      </div>
+
+      {isHost ? (
+        <button className="btn btn-primary btn-block" onClick={spin} disabled={spinning}>
+          {spinning ? 'Girando…' : 'Girar la ruleta'}
+        </button>
+      ) : (
+        <p className="subtitle">Esperando a que el anfitrión gire la ruleta…</p>
+      )}
+    </div>
+  )
+}
+
+// ==== src/screens/online/OnlineChallengeScreen.jsx ====
+function OnlineChallengeScreen() {
+  const { players, gameState, isHost, isMyTurn, chooseType, selectLevel, redrawCard, setFulfilled, nextTurn } = useOnlineGame()
+  const player = players.find((p) => p.client_id === gameState.currentPlayerId)
+  const [timeLeft, setTimeLeft] = useState(null)
+  const [timerRunning, setTimerRunning] = useState(false)
+
+  useEffect(() => {
+    setTimeLeft(null)
+    setTimerRunning(false)
+    if (gameState.card) {
+      playReveal()
+      vibrate(15)
+    }
+  }, [gameState.card])
+
+  useEffect(() => {
+    if (!timerRunning || timeLeft === null) return
+    if (timeLeft <= 0) {
+      setTimerRunning(false)
+      playBuzzer()
+      vibrate([100, 50, 100])
+      return
+    }
+    const urgent = timeLeft <= 5
+    playCountdownTick(urgent)
+    if (urgent) vibrate(15)
+    const id = setTimeout(() => setTimeLeft((t) => t - 1), 1000)
+    return () => clearTimeout(id)
+  }, [timerRunning, timeLeft])
+
+  if (!player) return null
+
+  return (
+    <div className="screen">
+      <div className="top-bar">
+        <span className="progress-pill">
+          Turno {gameState.turnIndex + 1} de {gameState.totalTurns}
+        </span>
+        <span className="progress-pill">
+          {player.name} · {player.score} pts
+        </span>
+      </div>
+
+      <div style={{ textAlign: 'center' }}>
+        <p className="eyebrow">Le toca a</p>
+        <h2 className="title" style={{ fontSize: 30 }}>
+          {player.name}
+        </h2>
+        {!isMyTurn && (
+          <p className="subtitle" style={{ marginTop: 4 }}>
+            {isHost ? 'Esperando su elección…' : 'Esperá tu turno'}
+          </p>
+        )}
+      </div>
+
+      {!gameState.choice && isMyTurn && (
+        <div className="option-grid" style={{ marginTop: 8 }}>
+          <button className="option-card" onClick={() => chooseType('truth')}>
+            <span className="icon">🗣️</span>
+            <span className="label">Verdad</span>
+            <span className="desc">Responde sin filtro</span>
+          </button>
+          <button className="option-card" onClick={() => chooseType('dare')}>
+            <span className="icon">🔥</span>
+            <span className="label">Reto</span>
+            <span className="desc">Anímate a cumplirlo</span>
+          </button>
+        </div>
+      )}
+
+      {gameState.choice && !gameState.card && isMyTurn && (
+        <div>
+          <p className="subtitle" style={{ marginBottom: 10, textAlign: 'center' }}>
+            Elegí el nivel de intensidad
+          </p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {LEVELS.map((lvl) => (
+              <button
+                key={lvl.id}
+                className="option-card"
+                style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}
+                onClick={() => selectLevel(lvl.id)}
+              >
+                <span style={{ flex: 1 }}>
+                  <span className="label">
+                    {lvl.id}. {lvl.name}
+                  </span>
+                  <br />
+                  <span className="desc">{lvl.tagline}</span>
+                  <span className="intensity-bar" aria-hidden="true">
+                    {[1, 2, 3, 4].map((n) => (
+                      <span key={n} className={n <= lvl.id ? 'filled' : ''} />
+                    ))}
+                  </span>
+                </span>
+                <span aria-hidden="true" style={{ fontSize: 18, marginLeft: 10 }}>
+                  {'🌶️'.repeat(lvl.id)}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {gameState.choice && !gameState.card && !isMyTurn && (
+        <p className="subtitle" style={{ textAlign: 'center' }}>
+          Eligió {gameState.choice === 'truth' ? 'Verdad' : 'Reto'}. Escogiendo nivel de intensidad…
+        </p>
+      )}
+
+      {gameState.card && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, flex: 1 }}>
+          <div
+            key={gameState.card.text}
+            className="card card-reveal"
+            style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 14, minHeight: 180 }}
+          >
+            <span className="eyebrow">
+              {gameState.choice === 'truth' ? 'Verdad' : 'Reto'} · Nivel {gameState.level}
+            </span>
+            <p style={{ fontSize: 20, fontWeight: 600, lineHeight: 1.4 }}>{gameState.card.text}</p>
+          </div>
+
+          {gameState.choice === 'dare' && gameState.card.timerSeconds && (
+            <div className="card" style={{ textAlign: 'center' }}>
+              <p
+                className={timerRunning && timeLeft !== null && timeLeft <= 5 ? 'timer-urgent' : ''}
+                style={{ fontFamily: 'var(--font-display)', fontSize: 32, fontWeight: 800 }}
+              >
+                {timeLeft === null ? gameState.card.timerSeconds : timeLeft}s
+              </p>
+              {!timerRunning && (timeLeft === null || timeLeft > 0) && (
+                <button
+                  className="btn btn-yellow"
+                  style={{ marginTop: 8 }}
+                  onClick={() => {
+                    setTimeLeft(gameState.card.timerSeconds)
+                    setTimerRunning(true)
+                  }}
+                >
+                  Iniciar tiempo
+                </button>
+              )}
+            </div>
+          )}
+
+          {isMyTurn && gameState.fulfilled === null && (
+            <>
+              <div style={{ display: 'flex', gap: 10 }}>
+                <button className="btn btn-secondary" style={{ flex: 1 }} onClick={redrawCard}>
+                  Cambiar carta
+                </button>
+              </div>
+              <div style={{ display: 'flex', gap: 10 }}>
+                <button
+                  className="btn btn-secondary btn-block"
+                  onClick={() => {
+                    playFail()
+                    vibrate(80)
+                    setFulfilled(false)
+                  }}
+                >
+                  No lo cumplí
+                </button>
+                <button
+                  className="btn btn-primary btn-block"
+                  onClick={() => {
+                    playSuccess()
+                    vibrate([20, 30, 20, 30, 60])
+                    setFulfilled(true)
+                  }}
+                >
+                  ¡Lo cumplí! +1
+                </button>
+              </div>
+            </>
+          )}
+
+          {gameState.fulfilled !== null && (
+            <p className="subtitle" style={{ textAlign: 'center' }}>
+              {player.name} dice que {gameState.fulfilled ? 'sí lo cumplió ✅' : 'no lo cumplió'}
+            </p>
+          )}
+
+          {isHost && gameState.fulfilled !== null && (
+            <button className="btn btn-primary btn-block" onClick={nextTurn}>
+              Siguiente turno
+            </button>
+          )}
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ==== src/screens/online/OnlineResultsScreen.jsx ====
+function OnlineResultsScreen() {
+  const { players, isHost, playAgain, leaveRoom } = useOnlineGame()
+  const ranked = [...players].sort((a, b) => b.score - a.score)
+  const winner = ranked[0]
+  const isTie = ranked.length > 1 && ranked[0].score === ranked[1].score
+  const played = useRef(false)
+
+  useEffect(() => {
+    if (played.current) return
+    played.current = true
+    playVictory()
+    vibrate([50, 50, 50, 50, 150])
+  }, [])
+
+  return (
+    <div className="screen" style={{ alignItems: 'center', textAlign: 'center' }}>
+      <Confetti count={60} />
+      <p className="eyebrow" style={{ marginTop: 12 }}>
+        Partida terminada
+      </p>
+      <h2 className="title" style={{ fontSize: 30 }}>
+        {isTie ? '¡Empate en la cima! 🎉' : (
+          <>
+            <span className="trophy-glow">🏆</span> {winner?.name} arrasó
+          </>
+        )}
+      </h2>
+
+      <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 10, marginTop: 8 }}>
+        {ranked.map((p, i) => (
+          <div
+            key={p.id}
+            className="card"
+            style={{
+              padding: '14px 18px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              border: i === 0 ? '2px solid var(--accent-yellow)' : undefined,
+            }}
+          >
+            <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 16 }}>
+              {i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i + 1}.`} {p.name}
+            </span>
+            <span style={{ fontWeight: 700, color: 'var(--accent-yellow)' }}>{p.score} pts</span>
+          </div>
+        ))}
+      </div>
+
+      <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 12, marginTop: 'auto' }}>
+        {isHost ? (
+          <button className="btn btn-primary btn-block" onClick={playAgain}>
+            Jugar de nuevo
+          </button>
+        ) : (
+          <p className="subtitle">Esperando a que el anfitrión inicie otra ronda…</p>
+        )}
+        <button className="btn btn-secondary btn-block" onClick={leaveRoom}>
+          Salir de la sala
+        </button>
+      </div>
+    </div>
+  )
+}
+
+// ==== src/screens/OnlineGameScreen.jsx ====
+function OnlineRouter({ onExit }) {
+  const { status, room, gameState } = useOnlineGame()
+
+  if (status === 'home' || status === 'error') return <OnlineHomeScreen onExit={onExit} />
+  if (status === 'create') return <CreateRoomScreen />
+  if (status === 'join') return <JoinRoomScreen />
+  if (status === 'lobby') return <LobbyScreen />
+
+  if (status === 'playing' && room) {
+    if (gameState.screen === 'challenge') return <OnlineChallengeScreen />
+    if (gameState.screen === 'results') return <OnlineResultsScreen />
+    return <OnlineRouletteScreen />
+  }
+
+  return <OnlineHomeScreen onExit={onExit} />
+}
+
+function OnlineGameScreen({ onExit }) {
+  return (
+    <OnlineGameProvider>
+      <InitialStatus />
+      <OnlineRouter onExit={onExit} />
+    </OnlineGameProvider>
+  )
+}
+
+// Arranca el modo online en 'home' apenas se monta el provider.
+function InitialStatus() {
+  const { status, setStatus } = useOnlineGame()
+  useEffect(() => {
+    if (status === 'idle') setStatus('home')
+  }, [status, setStatus])
+  return null
+}
+
+// ==== src/App.jsx ====
+const SCREENS = {
+  home: HomeScreen,
+  setup: SetupScreen,
+  players: PlayersScreen,
+  custom: CustomContentScreen,
+  roulette: RouletteScreen,
+  challenge: ChallengeScreen,
+  results: ResultsScreen,
+}
+
+function LocalRouter({ onGoOnline, onGoAccount, onGoCommunity }) {
+  const { state } = useGame()
+  const Screen = SCREENS[state.screen] ?? HomeScreen
+  return <Screen onGoOnline={onGoOnline} onGoAccount={onGoAccount} onGoCommunity={onGoCommunity} />
+}
+
+function AccountRouter({ onExit }) {
+  const { user, isLoadingSession } = useAuth()
+  if (isLoadingSession) return null
+  return user ? <ProfileScreen onBack={onExit} /> : <SignInScreen onBack={onExit} />
+}
+
+function CommunityRouter({ onExit }) {
+  const [view, setView] = useState('browse') // 'browse' | 'create' | 'moderate'
+  if (view === 'create') return <CreateCommunityCardScreen onBack={() => setView('browse')} />
+  if (view === 'moderate') return <AdminModerationScreen onBack={() => setView('browse')} />
+  return <CommunityScreen onBack={onExit} onCreate={() => setView('create')} onModerate={() => setView('moderate')} />
+}
+
+// Microinteracción global: cualquier botón de la app da un click sutil + vibración corta.
+// Así no hace falta cablear sonido a cada botón individualmente.
+function useGlobalTapFeedback() {
+  useEffect(() => {
+    function handlePointerDown(e) {
+      const btn = e.target.closest('button')
+      if (!btn || btn.disabled) return
+      playClick()
+      vibrate(10)
+    }
+    document.addEventListener('pointerdown', handlePointerDown, true)
+    return () => document.removeEventListener('pointerdown', handlePointerDown, true)
+  }, [])
+}
+
+function AppShell() {
+  const [mode, setMode] = useState('local') // 'local' | 'online' | 'account' | 'community'
+  useGlobalTapFeedback()
+
+  return (
+    <>
+      <BackgroundBlobs />
+      {mode === 'online' && <OnlineGameScreen onExit={() => setMode('local')} />}
+      {mode === 'account' && <AccountRouter onExit={() => setMode('local')} />}
+      {mode === 'community' && <CommunityRouter onExit={() => setMode('local')} />}
+      {mode === 'local' && (
+        <LocalRouter
+          onGoOnline={() => setMode('online')}
+          onGoAccount={() => setMode('account')}
+          onGoCommunity={() => setMode('community')}
+        />
+      )}
+    </>
+  )
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <GameProvider>
+        <AppShell />
+      </GameProvider>
+    </AuthProvider>
+  )
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+
+</script>
+</body>
+</html>
